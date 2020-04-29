@@ -20,8 +20,8 @@ export default new Router({
                     meta: { title: '系统首页' }
                 },
                 {
-                    path: '/icon',
-                    component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
+                    path: '/OrderList',
+                    component: () => import(/* webpackChunkName: "icon" */ '../components/page/OrderList.vue'),
                     meta: { title: '自定义图标' }
                 },
                 {

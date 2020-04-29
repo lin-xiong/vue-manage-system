@@ -102,7 +102,7 @@ export default {
                 },
                 {
                     icon: 'el-icon-lx-emoji',
-                    index: 'icon',
+                    index: 'orderlist',
                     title: '自定义图标'
                 },
                 {
