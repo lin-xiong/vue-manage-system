@@ -28,12 +28,17 @@
 </template>
 
 <script>
+import { loginData } from '../../api/index';
 export default {
     data: function() {
         return {
+            query: {
+                login: "",
+                ps: ""
+            },
             param: {
-                username: 'admin',
-                password: '123123',
+                username: 'thd123',
+                password: '',
             },
             rules: {
                 username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
@@ -45,14 +50,32 @@ export default {
         submitForm() {
             this.$refs.login.validate(valid => {
                 if (valid) {
-                    this.$message.success('登录成功');
-                    localStorage.setItem('ms_username', this.param.username);
-                    this.$router.push('/');
-                } else {
+                    let params = {
+                        login:this.param.username,
+                        ps:this.param.password
+                    }
+                    loginData(params).then(res => {
+                        console.log(res);
+                        if(res)
+                         {  
+                            localStorage.setItem('ms_username', this.param.username);
+                            localStorage.setItem('ms_ps', this.param.password);
+                            this.$message.success('登录成功');
+                            this.$router.push('/');
+                         }
+                        else {
+                            this.$message.error('请输入正确的账号和密码');
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                    
+                }
+                else {
                     this.$message.error('请输入账号和密码');
                     console.log('error submit!!');
                     return false;
-                }
+                } 
             });
         },
     },

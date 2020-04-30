@@ -15,7 +15,7 @@
             <el-upload
                 class="upload-demo"
                 drag
-                action="http://jsonplaceholder.typicode.com/api/posts/"
+                action="https://localhost:5001/api/File"
                 multiple>
                 <i class="el-icon-upload"></i>
                 <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -72,6 +72,7 @@
                     this.imgSrc = event.target.result;
                     this.$refs.cropper && this.$refs.cropper.replace(event.target.result);
                 };
+                alert(file);
                 reader.readAsDataURL(file);
             },
             cropImage () {
@@ -82,6 +83,7 @@
                 this.cropImg = this.defaultSrc;
             },
             imageuploaded(res) {
+                alert(res)
                 console.log(res)
             },
             handleError(){
@@ -89,10 +91,17 @@
                     title: '上传失败',
                     message: '图片上传接口上传失败，可更改为自己的服务器接口'
                 });
+            },
+            handlePictureCardPreview(file) {
+                alert(file.url);
+            },
+            handleAvatarSuccess(res, file) {
+                alert(URL.createObjectURL(file.raw));
             }
         },
         created(){
             this.cropImg = this.defaultSrc;
+            //alert(this.defaultSrc);
         }
     }
 </script>
