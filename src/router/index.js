@@ -30,19 +30,14 @@ export default new Router({
                     meta: { title: '任务列表' }
                 },
                 {
-                    path: '/shopAdd',
-                    component: () => import(/* webpackChunkName: "table" */ '../components/page/ShopAdd.vue'),
-                    meta: { title: '添加店铺' }
+                    path: '/addrList',
+                    component: () => import(/* webpackChunkName: "table" */ '../components/page/AddrList.vue'),
+                    meta: { title: '地址列表' }
                 },
                 {
                     path: '/OrderList',
                     component: () => import(/* webpackChunkName: "icon" */ '../components/page/OrderList.vue'),
-                    meta: { title: '任务列表' }
-                },
-                {
-                    path: '/OrderAdd',
-                    component: () => import(/* webpackChunkName: "tabs" */ '../components/page/OrderAdd.vue'),
-                    meta: { title: '添加任务' }
+                    meta: { title: '订单列表' }
                 },
                 {
                     // 权限页面

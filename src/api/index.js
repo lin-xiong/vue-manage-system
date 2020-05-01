@@ -98,3 +98,69 @@ export const taskExeData = query => {
         params: query
     });
 };
+
+//addr
+export const addrListData = query => {
+    return request({
+        url: '/api/Addr/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/all",
+        method: 'get',
+        params: query
+    });
+};
+
+export const addrSearchData = query => {
+    return request({
+        url: '/api/Addr/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/search",
+        method: 'get',
+        params: query
+    });
+};
+
+export const addrEditData = query => {
+    return request({
+        url: '/api/Addr/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps'),
+        method: 'put',
+        params: query
+    });
+};
+
+export const addrAddData = query => {
+    return request({
+        url: '/api/Addr/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps'),
+        method: 'post',
+        params: query
+    });
+};
+
+//order
+export const orderListData = query => {
+    return request({
+        url: '/api/Order/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/all",
+        method: 'get',
+        params: query
+    });
+};
+
+export const orderSearchData = query => {
+    return request({
+        url: '/api/Order/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/search",
+        method: 'get',
+        params: query
+    });
+};
+
+export const orderEditData = query => {
+    return request({
+        url: '/api/Order/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps'),
+        method: 'put',
+        params: query
+    });
+};
+
+export const orderAddData = query => {
+    return request({
+        url: '/api/Order/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps'),
+        method: 'post',
+        params: query
+    });
+};

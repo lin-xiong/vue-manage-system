@@ -9,7 +9,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-input v-model="query.shopName" placeholder="快递员" class="handle-input mr10"></el-input>
+                <el-input v-model="query.Courier" placeholder="快递员" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" @click="handleAdd">添加</el-button>
             </div>
@@ -21,14 +21,13 @@
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
-                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="shopId" :formatter="formatShopName" label="店铺名"></el-table-column>
-                <el-table-column prop="sku" label="sku"></el-table-column>
-                <el-table-column prop="keyword" label="关键词"></el-table-column>
-                <el-table-column prop="count" label="单量" width="50"></el-table-column>
-                <el-table-column prop="exeDate" :formatter="formatDate" label="执行日期" width="110"></el-table-column>
-                <el-table-column prop="area" label="地区" width="100"></el-table-column>
-
+                <el-table-column prop="id" label="ID" width="40" align="center"></el-table-column>
+                <el-table-column prop="region" width="80" label="区域"></el-table-column>
+                <el-table-column prop="city" width="80" label="城市"></el-table-column>
+                <el-table-column prop="addr" label="地址"></el-table-column>
+                <el-table-column prop="Courier" label="快递员" width="80"></el-table-column>
+                <el-table-column prop="addrid" label="区域编号" width="80"></el-table-column>
+                <el-table-column prop="status" label="状态" width="50"></el-table-column>
                 <el-table-column label="操作" width="70" align="center" prop="status">
                     <template slot-scope="scope">
                         <el-button
@@ -36,14 +35,6 @@
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
                         >编辑</el-button>
-                        <br />
-                        <el-button
-                            type="text"
-                            icon="el-icon-share"
-                            class="red"
-                            @click="handleExe(scope.$index, scope.row)"
-                            v-show="scope.row.status==1"
-                        >执行</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -61,33 +52,25 @@
 
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="editTaskform" :model="editTaskform" label-width="70px">
-                <el-input v-model="editTaskform.id" type="hidden"></el-input>
-                <el-form-item label="sku">
-                    <el-input v-model="editTaskform.sku"></el-input>
+            <el-form ref="editAddrform" :model="editAddrform" label-width="70px">
+                <el-input v-model="editAddrform.id" type="hidden"></el-input>
+                <el-form-item label="区域">
+                    <el-input v-model="editAddrform.region"></el-input>
                 </el-form-item>
-                <el-form-item label="关键词">
-                    <el-input v-model="editTaskform.keyword"></el-input>
+                <el-form-item label="城市">
+                    <el-input v-model="editAddrform.city"></el-input>
                 </el-form-item>
-                <el-form-item label="执行日期">
-                        <el-col :span="11">
-                            <el-date-picker
-                                type="date"
-                                placeholder="执行日期"
-                                v-model="editTaskform.exeDate"
-                                value-format="yyyy-MM-dd"
-                                style="width: 100%;"
-                            ></el-date-picker>
-                        </el-col>
-                    </el-form-item>
-                <el-form-item label="单量">
-                    <el-input v-model="editTaskform.count"></el-input>
+                <el-form-item label="地址">
+                    <el-input v-model="editAddrform.addr"></el-input>
                 </el-form-item>
-                <el-form-item label="地区">
-                    <el-input v-model="editTaskform.area"></el-input>
+                <el-form-item label="快递员">
+                    <el-input v-model="editAddrform.Courier"></el-input>
+                </el-form-item>
+                <el-form-item label="区域编号">
+                    <el-input v-model="editAddrform.addrid"></el-input>
                 </el-form-item>
                 <el-form-item label="状态">
-                    <el-input v-model="editTaskform.status"></el-input>
+                    <el-input v-model="editAddrform.status"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -96,36 +79,23 @@
             </span>
         </el-dialog>
 
-        <!-- 增加Task弹出框 -->
-        <el-dialog title="增加Task" :visible.sync="addVisible" width="30%">
-            <el-form ref="addTaskform" :model="addTaskform" label-width="70px">
-                <el-form-item label="选择店铺">
-                    <el-select v-model="addTaskform.shopId"  placeholder="请选择">
-                        <el-option v-for="item in multiShop" :key="item.id" :label="item.shopName" :value="item.id" ></el-option>
-                    </el-select>
+        <!-- 增加Addr弹出框 -->
+        <el-dialog title="增加Addr" :visible.sync="addVisible" width="30%">
+            <el-form ref="addAddrform" :model="addAddrform" label-width="70px">
+                <el-form-item label="区域">
+                    <el-input v-model="addAddrform.region"></el-input>
                 </el-form-item>
-                <el-form-item label="sku">
-                    <el-input v-model="addTaskform.sku"></el-input>
+                <el-form-item label="城市">
+                    <el-input v-model="addAddrform.city"></el-input>
                 </el-form-item>
-                <el-form-item label="关键词">
-                    <el-input v-model="addTaskform.keyword"></el-input>
+                <el-form-item label="地址">
+                    <el-input v-model="addAddrform.addr"></el-input>
                 </el-form-item>
-                <el-form-item label="执行日期">
-                        <el-col :span="11">
-                            <el-date-picker
-                                type="date"
-                                placeholder="执行日期"
-                                v-model="addTaskform.exeDate"
-                                value-format="yyyy-MM-dd"
-                                style="width: 100%;"
-                            ></el-date-picker>
-                        </el-col>
-                    </el-form-item>
-                <el-form-item label="单量">
-                    <el-input v-model="addTaskform.count"></el-input>
+                <el-form-item label="快递员">
+                    <el-input v-model="addAddrform.Courier"></el-input>
                 </el-form-item>
-                <el-form-item label="地区">
-                    <el-input v-model="addTaskform.area"></el-input>
+                <el-form-item label="区域编号">
+                    <el-input v-model="addAddrform.addrid"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -137,13 +107,11 @@
 </template>
 
 <script>
-import { taskListData } from '../../api/index';
-import { taskEditData } from '../../api/index';
-import { taskSearchData } from '../../api/index';
-import { taskAddData } from '../../api/index';
-import { shopListData } from '../../api/index';
+import { addrListData } from '../../api/index';
+import { addrEditData } from '../../api/index';
+import { addrSearchData } from '../../api/index';
+import { addrAddData } from '../../api/index';
 
-import { taskExeData } from '../../api/index';
 export default {
     name: 'shopList',
     data() {
@@ -158,8 +126,8 @@ export default {
             editVisible: false,
             addVisible: false,
             pageTotal: 0,
-            editTaskform:{},
-            addTaskform:{},
+            editAddrform:{},
+            addAddrform:{},
             multiShop: [],
             form: {},
             idx: -1,
@@ -172,11 +140,7 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            shopListData().then(res => {
-                console.log(res);
-                this.multiShop = res.data ;
-            });
-            taskListData(this.query).then(res => {
+            addrListData(this.query).then(res => {
                 console.log(res);
                 this.tableData = res.data;
                 this.pageTotal = res.pageTotal ;
@@ -186,7 +150,7 @@ export default {
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            taskSearchData(this.query).then(res => {
+            addrSearchData(this.query).then(res => {
                 console.log(res);
                 this.tableData = res.data;
                 this.pageTotal = res.pageTotal ;
@@ -199,7 +163,7 @@ export default {
                 type: 'warning'
             }).then(res => {
                 this.idx = index; 
-                taskExeData(row).then(res => {
+                addrExeData(row).then(res => {
                     console.log(res);
                     if(res==1){
                         this.$message.success('执行成功');
@@ -225,22 +189,22 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = index;
-            this.editTaskform = row;
+            this.editAddrform = row;
             this.editVisible = true;
         },
         // 保存编辑
         saveEdit() {
-            taskEditData(this.editTaskform).then(res => {
+            addrEditData(this.editAddrform).then(res => {
                 console.log(res);
                 if(res==1)
                  {  
                     this.editVisible = false;
                     this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-                    this.$set(this.tableData, this.idx, this.editTaskform);
+                    this.$set(this.tableData, this.idx, this.editAddrform);
                  }
                 else {
                     this.$message.error('修改出错！');
-                    console.log('error edit shop!!');
+                    console.log('error edit Addr!!');
                     return false;
                 }
             });
@@ -251,16 +215,16 @@ export default {
         },
         // 保存添加
         saveAdd() {
-            taskAddData(this.addTaskform).then(res => {
+            addrAddData(this.addAddrform).then(res => {
                 console.log(res);
                 if(res==1)
                  {  
                     this.addVisible = false;
-                    this.$message.success(`增加Task成功`);
+                    this.$message.success(`增加Addr成功`);
                     this.getData();
                  }
                 else {
-                    this.$message.error('增加Task出错！');
+                    this.$message.error('增加Addr出错！');
                     console.log('error add shop!!');
                     return false;
                 }
