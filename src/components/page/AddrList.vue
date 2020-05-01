@@ -9,7 +9,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-input v-model="query.shopName" placeholder="商铺名称" class="handle-input mr10"></el-input>
+                <el-input v-model="query.shopName" placeholder="快递员" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" @click="handleAdd">添加</el-button>
             </div>

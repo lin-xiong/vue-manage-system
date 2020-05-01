@@ -65,6 +65,21 @@ export default {
                     icon: 'el-icon-lx-emoji',
                     index: 'taskList',
                     title: '任务列表'
+                },
+                {
+                    icon: 'el-icon-lx-rank',
+                    index: 'addrList',
+                    title: '地址列表'
+                },
+                {
+                    icon: 'el-icon-lx-cascades',
+                    index: 'orderList',
+                    title: '订单处理表'
+                },
+                {
+                    icon: 'el-icon-lx-home',
+                    index: 'dashboard',
+                    title: '系统首页'
                 }
             ]
         };
