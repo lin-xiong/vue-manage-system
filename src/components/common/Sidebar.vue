@@ -65,26 +65,6 @@ export default {
                     icon: 'el-icon-lx-emoji',
                     index: 'taskList',
                     title: '任务列表'
-                },
-                {
-                    icon: 'el-icon-lx-cascades',
-                    index: 'shopAdd',
-                    title: '添加店铺'
-                },
-                {
-                    icon: 'el-icon-lx-emoji',
-                    index: 'orderlist',
-                    title: '任务表'
-                },
-                {
-                    icon: 'el-icon-lx-emoji',
-                    index: 'orderAdd',
-                    title: '添加任务'
-                },
-                {
-                    icon: 'el-icon-lx-home',
-                    index: 'dashboard',
-                    title: '系统首页'
                 }
             ]
         };
