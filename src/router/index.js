@@ -7,7 +7,7 @@ export default new Router({
     routes: [
         {
             path: '/',
-            redirect: '/taskList'
+            redirect: '/dashboard'
         },
         {
             path: '/',
@@ -22,22 +22,27 @@ export default new Router({
                 {
                     path: '/shopList',
                     component: () => import(/* webpackChunkName: "table" */ '../components/page/ShopList.vue'),
-                    meta: { title: '店铺列表' }
+                    meta: { title: '店铺列表' , permission: true }
                 },
                 {
                     path: '/taskList',
                     component: () => import(/* webpackChunkName: "table" */ '../components/page/TaskList.vue'),
-                    meta: { title: '任务列表' }
+                    meta: { title: '任务列表' , permission: true }
                 },
                 {
                     path: '/addrList',
                     component: () => import(/* webpackChunkName: "table" */ '../components/page/AddrList.vue'),
-                    meta: { title: '地址列表' }
+                    meta: { title: '地址列表' , permission: true }
                 },
                 {
-                    path: '/OrderList',
+                    path: '/orderList',
                     component: () => import(/* webpackChunkName: "icon" */ '../components/page/OrderList.vue'),
-                    meta: { title: '订单列表' }
+                    meta: { title: '订单列表' , permission: true }
+                },
+                {
+                    path: '/caseList',
+                    component: () => import(/* webpackChunkName: "icon" */ '../components/page/CaseList.vue'),
+                    meta: { title: '实时执行表' , permission: true }
                 },
                 {
                     // 权限页面

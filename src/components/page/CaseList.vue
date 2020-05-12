@@ -3,13 +3,13 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 店铺
+                    <i class="el-icon-lx-cascades"></i> 地址
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-input v-model="query.shopName" placeholder="商铺名称" class="handle-input mr10"></el-input>
+                <el-input v-model="query.Courier" placeholder="快递员" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" @click="handleAdd">添加</el-button>
             </div>
@@ -21,22 +21,14 @@
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="shopName" label="店铺名"></el-table-column>
-                <el-table-column prop="tel" label="电话"></el-table-column>
-                <el-table-column prop="youHuiQuan" label="优惠券">
-                    <!-- <template slot-scope="scope">
-                        <span v-html="scope.row.youHuiQuan"></span>
-                    </template> -->
-                    <!-- <template slot-scope="scope">
-                        <el-image  class="table-td-thumb" :src="scope.row.youHuiQuan"></el-image>
-                    </template> -->
-                </el-table-column>
-
+                <el-table-column prop="id" label="ID" width="40" align="center"></el-table-column>
+                <el-table-column prop="region" width="80" label="区域"></el-table-column>
+                <el-table-column prop="city" width="80" label="城市"></el-table-column>
+                <el-table-column prop="order" label="地址"></el-table-column>
+                <el-table-column prop="Courier" label="快递员" width="80"></el-table-column>
+                <el-table-column prop="orderid" label="区域编号" width="80"></el-table-column>
                 <el-table-column prop="status" label="状态" width="50"></el-table-column>
-                 
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作" width="70" align="center" prop="status">
                     <template slot-scope="scope">
                         <el-button
                             type="text"
@@ -60,16 +52,25 @@
 
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="editShopform" :model="editShopform" label-width="70px">
-                <el-input v-model="editShopform.id" type="hidden"></el-input>
-                <el-form-item label="店铺名称">
-                    <el-input v-model="editShopform.shopName"></el-input>
+            <el-form ref="editOrderform" :model="editOrderform" label-width="70px">
+                <el-input v-model="editOrderform.id" type="hidden"></el-input>
+                <el-form-item label="区域">
+                    <el-input v-model="editOrderform.region"></el-input>
                 </el-form-item>
-                <el-form-item label="优惠券">
-                    <el-input v-model="editShopform.youHuiQuan"></el-input>
+                <el-form-item label="城市">
+                    <el-input v-model="editOrderform.city"></el-input>
+                </el-form-item>
+                <el-form-item label="地址">
+                    <el-input v-model="editOrderform.order"></el-input>
+                </el-form-item>
+                <el-form-item label="快递员">
+                    <el-input v-model="editOrderform.Courier"></el-input>
+                </el-form-item>
+                <el-form-item label="区域编号">
+                    <el-input v-model="editOrderform.orderid"></el-input>
                 </el-form-item>
                 <el-form-item label="状态">
-                    <el-input v-model="editShopform.status"></el-input>
+                    <el-input v-model="editOrderform.status"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -78,20 +79,23 @@
             </span>
         </el-dialog>
 
-        <!-- 增加商户弹出框 -->
-        <el-dialog title="增加商户" :visible.sync="addVisible" width="30%">
-            <el-form ref="addShopform" :model="addShopform" label-width="70px">
-                <el-form-item label="店铺名称">
-                    <el-input v-model="addShopform.shopName"></el-input>
+        <!-- 增加Order弹出框 -->
+        <el-dialog title="增加Order" :visible.sync="addVisible" width="30%">
+            <el-form ref="addOrderform" :model="addOrderform" label-width="70px">
+                <el-form-item label="区域">
+                    <el-input v-model="addOrderform.region"></el-input>
                 </el-form-item>
-                <el-form-item label="优惠券">
-                    <el-input v-model="addShopform.youHuiQuan"></el-input>
+                <el-form-item label="城市">
+                    <el-input v-model="addOrderform.city"></el-input>
                 </el-form-item>
-                <el-form-item label="手机">
-                    <el-input v-model="addShopform.tel"></el-input>
+                <el-form-item label="地址">
+                    <el-input v-model="addOrderform.order"></el-input>
                 </el-form-item>
-                <el-form-item label="状态">
-                    <el-input v-model="addShopform.status"></el-input>
+                <el-form-item label="快递员">
+                    <el-input v-model="addOrderform.Courier"></el-input>
+                </el-form-item>
+                <el-form-item label="区域编号">
+                    <el-input v-model="addOrderform.orderid"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -103,10 +107,11 @@
 </template>
 
 <script>
-import { shopListData } from '../../api/index';
-import { shopEditData } from '../../api/index';
-import { shopSearchData } from '../../api/index';
-import { shopAddData } from '../../api/index';
+import { orderListData } from '../../api/index';
+import { orderEditData } from '../../api/index';
+import { orderSearchData } from '../../api/index';
+import { orderAddData } from '../../api/index';
+
 export default {
     name: 'shopList',
     data() {
@@ -121,8 +126,9 @@ export default {
             editVisible: false,
             addVisible: false,
             pageTotal: 0,
-            editShopform:{},
-            addShopform:{},
+            editOrderform:{},
+            addOrderform:{},
+            multiShop: [],
             form: {},
             idx: -1,
             id: -1
@@ -134,32 +140,37 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            shopListData(this.query).then(res => {
+            orderListData(this.query).then(res => {
                 console.log(res);
                 this.tableData = res.data;
                 this.pageTotal = res.pageTotal ;
             });
+            
         },
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            shopSearchData(this.query).then(res => {
+            orderSearchData(this.query).then(res => {
                 console.log(res);
                 this.tableData = res.data;
                 this.pageTotal = res.pageTotal ;
             });
         },
-        // 删除操作
-        handleDelete(index, row) {
-            // 二次确认删除
-            this.$confirm('确定要删除吗？', '提示', {
+        // 执行操作
+        handleExe(index, row) {
+            // 二次确认执行
+            this.$confirm('确定要执行吗？', '提示', {
                 type: 'warning'
-            })
-                .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
-                })
-                .catch(() => {});
+            }).then(res => {
+                this.idx = index; 
+                orderExeData(row).then(res => {
+                    console.log(res);
+                    if(res==1){
+                        this.$message.success('执行成功');
+                        row.status=2;
+                    }
+                });
+            }).catch(() => {});
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -178,22 +189,22 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = index;
-            this.editShopform = row;
+            this.editOrderform = row;
             this.editVisible = true;
         },
         // 保存编辑
         saveEdit() {
-            shopEditData(this.editShopform).then(res => {
+            orderEditData(this.editOrderform).then(res => {
                 console.log(res);
-                if(res==0)
+                if(res==1)
                  {  
                     this.editVisible = false;
                     this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-                    this.$set(this.tableData, this.idx, this.editShopform);
+                    this.$set(this.tableData, this.idx, this.editOrderform);
                  }
                 else {
                     this.$message.error('修改出错！');
-                    console.log('error edit shop!!');
+                    console.log('error edit Order!!');
                     return false;
                 }
             });
@@ -204,16 +215,16 @@ export default {
         },
         // 保存添加
         saveAdd() {
-            shopAddData(this.addShopform).then(res => {
+            orderAddData(this.addOrderform).then(res => {
                 console.log(res);
-                if(res==0)
+                if(res==1)
                  {  
                     this.addVisible = false;
-                    this.$message.success(`增加商铺成功`);
+                    this.$message.success(`增加Order成功`);
                     this.getData();
                  }
                 else {
-                    this.$message.error('增加商铺出错！');
+                    this.$message.error('增加Order出错！');
                     console.log('error add shop!!');
                     return false;
                 }
@@ -224,6 +235,25 @@ export default {
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
             this.getData();
+        },
+        formatDate(row, column) {
+            // 获取单元格数据
+                let data = row[column.property]
+                if(data == null) {
+                    return null
+                }
+                let dt = new Date(data)
+                 return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate();
+        },
+        formatShopName(row, column) {
+            // 获取单元格数据
+                let data = row[column.property];
+                if(this.multiShop == null)
+                    return null;
+                for (let i = 0; i < this.multiShop.length; i++) { 
+                    if(data==this.multiShop[i].id)
+                        return this.multiShop[i].shopName;
+                }
         }
     }
 };

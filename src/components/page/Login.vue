@@ -56,10 +56,11 @@ export default {
                     }
                     loginData(params).then(res => {
                         console.log(res);
-                        if(res)
+                        if(res.code)
                          {  
                             localStorage.setItem('ms_username', this.param.username);
                             localStorage.setItem('ms_ps', this.param.password);
+                            localStorage.setItem('ms_paths', res.user.path);
                             this.$message.success('登录成功');
                             this.$router.push('/');
                          }
