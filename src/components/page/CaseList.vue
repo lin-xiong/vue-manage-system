@@ -3,18 +3,14 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 地址
+                    <i class="el-icon-lx-cascades"></i> 执行中
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
-            <div class="handle-box">
-                <el-input v-model="query.Courier" placeholder="快递员" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-                <el-button type="primary" icon="el-icon-add" @click="handleAdd">添加</el-button>
-            </div>
             <el-table
                 :data="tableData"
+                :default-sort = "{prop: 'exeTime', order: 'descending'}"
                 border
                 class="table"
                 ref="multipleTable"
@@ -22,95 +18,22 @@
                 @selection-change="handleSelectionChange"
             >
                 <el-table-column prop="id" label="ID" width="40" align="center"></el-table-column>
-                <el-table-column prop="region" width="80" label="区域"></el-table-column>
-                <el-table-column prop="city" width="80" label="城市"></el-table-column>
-                <el-table-column prop="order" label="地址"></el-table-column>
-                <el-table-column prop="Courier" label="快递员" width="80"></el-table-column>
-                <el-table-column prop="orderid" label="区域编号" width="80"></el-table-column>
+                <el-table-column prop="shopName"  label="店铺名称"></el-table-column>
+                <el-table-column prop="sku"  label="SKU"></el-table-column>
+                <el-table-column prop="keyword" label="关键字"></el-table-column>
+                <el-table-column prop="telNo" label="操作手机" width="80"></el-table-column> 
                 <el-table-column prop="status" label="状态" width="50"></el-table-column>
-                <el-table-column label="操作" width="70" align="center" prop="status">
-                    <template slot-scope="scope">
-                        <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >编辑</el-button>
-                    </template>
-                </el-table-column>
+                <el-table-column prop="exeTime" label="执行时间" ></el-table-column>
+               
             </el-table>
-            <div class="pagination">
-                <el-pagination
-                    background
-                    layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
-                    :total="pageTotal"
-                    @current-change="handlePageChange"
-                ></el-pagination>
-            </div>
+ 
         </div>
 
-        <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="editOrderform" :model="editOrderform" label-width="70px">
-                <el-input v-model="editOrderform.id" type="hidden"></el-input>
-                <el-form-item label="区域">
-                    <el-input v-model="editOrderform.region"></el-input>
-                </el-form-item>
-                <el-form-item label="城市">
-                    <el-input v-model="editOrderform.city"></el-input>
-                </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="editOrderform.order"></el-input>
-                </el-form-item>
-                <el-form-item label="快递员">
-                    <el-input v-model="editOrderform.Courier"></el-input>
-                </el-form-item>
-                <el-form-item label="区域编号">
-                    <el-input v-model="editOrderform.orderid"></el-input>
-                </el-form-item>
-                <el-form-item label="状态">
-                    <el-input v-model="editOrderform.status"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveEdit">确 定</el-button>
-            </span>
-        </el-dialog>
-
-        <!-- 增加Order弹出框 -->
-        <el-dialog title="增加Order" :visible.sync="addVisible" width="30%">
-            <el-form ref="addOrderform" :model="addOrderform" label-width="70px">
-                <el-form-item label="区域">
-                    <el-input v-model="addOrderform.region"></el-input>
-                </el-form-item>
-                <el-form-item label="城市">
-                    <el-input v-model="addOrderform.city"></el-input>
-                </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="addOrderform.order"></el-input>
-                </el-form-item>
-                <el-form-item label="快递员">
-                    <el-input v-model="addOrderform.Courier"></el-input>
-                </el-form-item>
-                <el-form-item label="区域编号">
-                    <el-input v-model="addOrderform.orderid"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAdd">确 定</el-button>
-            </span>
-        </el-dialog>
     </div>
 </template>
 
 <script>
-import { orderListData } from '../../api/index';
-import { orderEditData } from '../../api/index';
-import { orderSearchData } from '../../api/index';
-import { orderAddData } from '../../api/index';
+import { CaseListData } from '../../api/index'; 
 
 export default {
     name: 'shopList',
@@ -126,8 +49,8 @@ export default {
             editVisible: false,
             addVisible: false,
             pageTotal: 0,
-            editOrderform:{},
-            addOrderform:{},
+            editAddrform:{},
+            addAddrform:{},
             multiShop: [],
             form: {},
             idx: -1,
@@ -140,17 +63,20 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            orderListData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.data;
-                this.pageTotal = res.pageTotal ;
+            CaseListData().then(res => {//this.tableData
+                console.log(res); 
+                //this.$set(this.tableData, this.idx, this.editAddrform);
+                this.tableData = res.data;  
+                setTimeout(() => {
+                    this.getData()
+                }, 2000);
             });
             
         },
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            orderSearchData(this.query).then(res => {
+            addrSearchData(this.query).then(res => {
                 console.log(res);
                 this.tableData = res.data;
                 this.pageTotal = res.pageTotal ;
@@ -163,7 +89,7 @@ export default {
                 type: 'warning'
             }).then(res => {
                 this.idx = index; 
-                orderExeData(row).then(res => {
+                addrExeData(row).then(res => {
                     console.log(res);
                     if(res==1){
                         this.$message.success('执行成功');
@@ -189,22 +115,22 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = index;
-            this.editOrderform = row;
+            this.editAddrform = row;
             this.editVisible = true;
         },
         // 保存编辑
         saveEdit() {
-            orderEditData(this.editOrderform).then(res => {
+            addrEditData(this.editAddrform).then(res => {
                 console.log(res);
                 if(res==1)
                  {  
                     this.editVisible = false;
                     this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-                    this.$set(this.tableData, this.idx, this.editOrderform);
+                    this.$set(this.tableData, this.idx, this.editAddrform);
                  }
                 else {
                     this.$message.error('修改出错！');
-                    console.log('error edit Order!!');
+                    console.log('error edit Addr!!');
                     return false;
                 }
             });
@@ -215,16 +141,16 @@ export default {
         },
         // 保存添加
         saveAdd() {
-            orderAddData(this.addOrderform).then(res => {
+            addrAddData(this.addAddrform).then(res => {
                 console.log(res);
                 if(res==1)
                  {  
                     this.addVisible = false;
-                    this.$message.success(`增加Order成功`);
+                    this.$message.success(`增加Addr成功`);
                     this.getData();
                  }
                 else {
-                    this.$message.error('增加Order出错！');
+                    this.$message.error('增加Addr出错！');
                     console.log('error add shop!!');
                     return false;
                 }

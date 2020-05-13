@@ -164,3 +164,12 @@ export const orderAddData = query => {
         params: query
     });
 };
+
+//执行中的任务
+export const CaseListData = query => {
+    return request({
+        url: '/api/Order/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/Running",
+        method: 'get',
+        params: query
+    });
+};
