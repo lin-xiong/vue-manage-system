@@ -21,7 +21,7 @@
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
-                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
+                <el-table-column prop="id" label="ID" width="55" align="center" height="50"></el-table-column>
                 <el-table-column prop="shopId" :formatter="formatShopName" label="店铺名"></el-table-column>
                 <el-table-column prop="sku" label="sku"></el-table-column>
                 <el-table-column prop="keyword" label="关键词"></el-table-column>

@@ -60,9 +60,10 @@ export default {
                          {  
                             localStorage.setItem('ms_username', this.param.username);
                             localStorage.setItem('ms_ps', this.param.password);
-                            localStorage.setItem('ms_paths', res.user.path);
+                            var pp = res.user.path.split(';');
+                            localStorage.setItem('ms_paths', pp);
                             this.$message.success('登录成功');
-                            this.$router.push('/');
+                            this.$router.push(pp[0]);
                          }
                         else {
                             this.$message.error('请输入正确的账号和密码');
