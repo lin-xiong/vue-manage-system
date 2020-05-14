@@ -12,6 +12,12 @@
                 <el-input v-model="query.Courier" placeholder="快递员" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" @click="handleAdd">添加</el-button>
+                <el-button
+                    type="primary"
+                    icon="el-icon-delete"
+                    class="handle-del mr10"
+                    @click="delAllSelection"
+                >批量失效</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -20,14 +26,21 @@
                 ref="multipleTable"
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
+                :stripe="true"
             >
+                <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="ID" width="40" align="center"></el-table-column>
-                <el-table-column prop="region" width="80" label="区域"></el-table-column>
-                <el-table-column prop="city" width="80" label="城市"></el-table-column>
-                <el-table-column prop="addr" label="地址"></el-table-column>
-                <el-table-column prop="Courier" label="快递员" width="80"></el-table-column>
-                <el-table-column prop="addrid" label="区域编号" width="80"></el-table-column>
-                <el-table-column prop="status" label="状态" width="50"></el-table-column>
+                <el-table-column prop="region" width="80" label="区域" align="center"></el-table-column>
+                <el-table-column prop="city" width="80" label="城市" align="center"></el-table-column>
+                <el-table-column prop="addr" label="地址" align="center"></el-table-column>
+                <el-table-column prop="Courier" label="快递员" width="80" align="center"></el-table-column>
+                <el-table-column prop="addrid" label="区域编号" width="80" align="center"></el-table-column>
+                <el-table-column prop="status" label="状态" width="70" align="center">
+                    <template slot-scope="scope"> 
+                        <span v-if="scope.row.status==1">使用中</span>
+                        <span v-if="scope.row.status==0">失效</span>
+                    </template>
+                </el-table-column>
                 <el-table-column label="操作" width="70" align="center" prop="status">
                     <template slot-scope="scope">
                         <el-button
@@ -72,6 +85,8 @@
                 <el-form-item label="状态">
                     <el-input v-model="editAddrform.status"></el-input>
                 </el-form-item>
+                <!-- <el-radio v-for="(user, index) in users" :key="index" :label="user" :value="user">{{ `${user.name}(${user.age}岁)` }}
+                </el-radio > -->
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
@@ -179,12 +194,19 @@ export default {
         delAllSelection() {
             const length = this.multipleSelection.length;
             let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
+            //this.delList = this.delList.concat(this.multipleSelection);
+            //console.log(this.delList);
             for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
+                this.multipleSelection[i].status=0;
+                addrEditData(this.multipleSelection[i]).then(res => {
+                //console.log(res);
+                if(res==1)
+                 {  
+                    //this.$message.error(`删除了${str}`);
+                 }
+            });
             }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
+             this.multipleSelection = [];
         },
         // 编辑操作
         handleEdit(index, row) {

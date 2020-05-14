@@ -20,6 +20,7 @@
                 ref="multipleTable"
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
+                :stripe="true"
             >
                 <el-table-column prop="id" label="ID" width="40" align="center"></el-table-column>
                 <el-table-column prop="region" width="80" label="区域"></el-table-column>

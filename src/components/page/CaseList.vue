@@ -16,14 +16,29 @@
                 ref="multipleTable"
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
+                :height="700"
+                :stripe="true"
             >
                 <el-table-column prop="id" label="ID" width="40" align="center"></el-table-column>
-                <el-table-column prop="shopName"  label="店铺名称"></el-table-column>
-                <el-table-column prop="sku"  label="SKU"></el-table-column>
-                <el-table-column prop="keyword" label="关键字"></el-table-column>
-                <el-table-column prop="telNo" label="操作手机" width="80"></el-table-column> 
-                <el-table-column prop="status" label="状态" width="50"></el-table-column>
-                <el-table-column prop="exeTime" label="执行时间" ></el-table-column>
+                <el-table-column prop="shopName"  label="店铺名称" align="center"></el-table-column>
+                <el-table-column prop="sku"  label="SKU" align="center"></el-table-column>
+                <el-table-column prop="keyword" label="关键字" align="center"></el-table-column>
+                <el-table-column prop="telNo" label="操作手机" width="80" align="center"></el-table-column> 
+                <el-table-column prop="status" label="状态" width="120" align="center">
+                    <template slot-scope="scope"> 
+                        <span v-if="scope.row.status==2">任务被拉取</span>
+                        <span v-if="scope.row.status==3">加购完成</span>
+                        <span v-if="scope.row.status==4">加购失败</span>
+                        <span v-if="scope.row.status==5">取优惠券成功</span>
+                        <span v-if="scope.row.status==6">取优惠券失败</span>
+                        <span v-if="scope.row.status==7">设置收件人失败</span>
+                        <span v-if="scope.row.status==8">下单成功</span>
+                        <span v-if="scope.row.status==9">下单失败</span>
+                        <span v-if="scope.row.status==10">代付连接完成</span>
+                        <span v-if="scope.row.status==11">完成操作</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="exeTime" label="执行时间" align="center"></el-table-column>
                
             </el-table>
  
@@ -54,10 +69,15 @@ export default {
             multiShop: [],
             form: {},
             idx: -1,
-            id: -1
+            id: -1,
+            setTimer:null,
+            getDataOnce:true
         };
     },
     created() {
+        console.log("created"); 
+        if(!this.getDataOnce) return;
+        this.getDataOnce=false;
         this.getData();
     },
     methods: {
@@ -66,10 +86,11 @@ export default {
             CaseListData().then(res => {//this.tableData
                 console.log(res); 
                 //this.$set(this.tableData, this.idx, this.editAddrform);
-                this.tableData = res.data;  
-                setTimeout(() => {
-                    this.getData()
-                }, 2000);
+                this.tableData = res.data;
+            }).finally(res=>{
+                    this.setTimer=setTimeout(() => {
+                        this.getData();
+                    }, 2000);
             });
             
         },
@@ -181,6 +202,19 @@ export default {
                         return this.multiShop[i].shopName;
                 }
         }
+    },
+    deactivated()
+    {
+        console.log("deactivated");
+        clearTimeout(this.setTimer); 
+        this.setTimer=null;
+        this.getDataOnce=true;
+    },
+    activated(){
+        console.log("activated");
+        if(!this.getDataOnce) return;
+        this.getDataOnce=false;
+        this.getData();
     }
 };
 </script>
