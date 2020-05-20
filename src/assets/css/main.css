@@ -23,7 +23,7 @@ a {
 
 .content-box {
     position: absolute;
-    left: 250px;
+    left: 150px;
     right: 0;
     top: 70px;
     bottom: 0;
@@ -46,7 +46,7 @@ a {
 }
 
 .container {
-    padding: 30px;
+    padding: 10px;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 5px;

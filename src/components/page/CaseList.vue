@@ -1,13 +1,6 @@
 <template>
     <div>
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 执行中
-                </el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-        <div class="container">
+        <div class="container" style="padding:0px;">
             <el-table
                 :data="tableData"
                 :default-sort = "{prop: 'exeTime', order: 'descending'}"
@@ -19,7 +12,7 @@
                 :height="700"
                 :stripe="true"
             >
-                <el-table-column prop="id" label="ID" width="40" align="center"></el-table-column>
+                <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
                 <el-table-column prop="shopName"  label="店铺名称" align="center"></el-table-column>
                 <el-table-column prop="sku"  label="SKU" align="center"></el-table-column>
                 <el-table-column prop="keyword" label="关键字" align="center"></el-table-column>
@@ -185,12 +178,12 @@ export default {
         },
         formatDate(row, column) {
             // 获取单元格数据
-                let data = row[column.property]
-                if(data == null) {
-                    return null
-                }
-                let dt = new Date(data)
-                 return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate();
+            let data = row[column.property]
+            if(data == null) {
+                return null
+            }
+            let dt = new Date(data)
+            return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate();
         },
         formatShopName(row, column) {
             // 获取单元格数据

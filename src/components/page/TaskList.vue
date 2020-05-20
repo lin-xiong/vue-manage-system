@@ -23,21 +23,27 @@
                 :stripe="true"
             >
                 <el-table-column prop="id" label="ID" width="55" align="center" height="50"></el-table-column>
-                <el-table-column prop="shopId" :formatter="formatShopName" label="店铺名"></el-table-column>
-                <el-table-column prop="sku" label="sku"></el-table-column>
-                <el-table-column prop="keyword" label="关键词"></el-table-column>
-                <el-table-column prop="count" label="单量" width="50"></el-table-column>
-                <el-table-column prop="exeDate" :formatter="formatDate" label="执行日期" width="110"></el-table-column>
-                <el-table-column prop="area" label="地区" width="100"></el-table-column>
+                <el-table-column prop="shopId" :formatter="formatShopName" label="店铺名" align="center"></el-table-column>
+                <el-table-column prop="sku" label="sku" align="center"></el-table-column>
+                <el-table-column prop="keyword" label="关键词" align="center"></el-table-column>
+                <el-table-column prop="count" label="单量" width="50" align="center"></el-table-column>
+                <el-table-column prop="exeDate" :formatter="formatDate" label="执行日期" width="110" align="center"></el-table-column>
+                <el-table-column prop="area" label="地区" width="100" align="center"></el-table-column>
 
-                <el-table-column label="操作" width="70" align="center" prop="status">
+                <el-table-column label="操作" width="120" align="center" prop="status">
                     <template slot-scope="scope">
+                         <el-button
+                            type="text"
+                            icon="el-icon-lx-copy"
+                            @click="handleCopy(scope.$index, scope.row)" 
+                        >复制</el-button>
+                        <br />
                         <el-button
                             type="text"
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
+                            v-show="scope.row.status==1"
                         >编辑</el-button>
-                        <br />
                         <el-button
                             type="text"
                             icon="el-icon-share"
@@ -202,7 +208,7 @@ export default {
                 this.idx = index; 
                 taskExeData(row).then(res => {
                     console.log(res);
-                    if(res==1){
+                    if(res>=1){
                         this.$message.success('执行成功');
                         row.status=2;
                     }
@@ -228,6 +234,12 @@ export default {
             this.idx = index;
             this.editTaskform = row;
             this.editVisible = true;
+        },
+         // 拷贝操作
+        handleCopy(index, row) {
+            this.idx = index;
+            this.addTaskform = row;
+            this.addVisible = true;
         },
         // 保存编辑
         saveEdit() {

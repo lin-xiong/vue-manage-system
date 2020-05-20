@@ -207,7 +207,7 @@ export default {
         saveAdd() {
             shopAddData(this.addShopform).then(res => {
                 console.log(res);
-                if(res==0)
+                if(res>=1)
                  {  
                     this.addVisible = false;
                     this.$message.success(`增加商铺成功`);

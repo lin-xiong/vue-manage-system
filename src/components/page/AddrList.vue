@@ -29,11 +29,11 @@
                 :stripe="true"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
-                <el-table-column prop="id" label="ID" width="40" align="center"></el-table-column>
-                <el-table-column prop="region" width="80" label="区域" align="center"></el-table-column>
-                <el-table-column prop="city" width="80" label="城市" align="center"></el-table-column>
+                <el-table-column prop="id" label="ID" width="60" align="center"></el-table-column>
+                <el-table-column prop="region" width="70" label="区域" align="center"></el-table-column>
+                <el-table-column prop="city" width="100" label="城市" align="center"></el-table-column>
                 <el-table-column prop="addr" label="地址" align="center"></el-table-column>
-                <el-table-column prop="Courier" label="快递员" width="80" align="center"></el-table-column>
+                <el-table-column prop="Courier" label="快递员" width="100" align="center"></el-table-column>
                 <el-table-column prop="addrid" label="区域编号" width="80" align="center"></el-table-column>
                 <el-table-column prop="status" label="状态" width="70" align="center">
                     <template slot-scope="scope"> 
@@ -128,7 +128,7 @@ import { addrSearchData } from '../../api/index';
 import { addrAddData } from '../../api/index';
 
 export default {
-    name: 'shopList',
+    name: 'addrList',
     data() {
         return {
             query: {
