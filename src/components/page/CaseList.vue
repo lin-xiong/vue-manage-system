@@ -44,7 +44,7 @@
 import { CaseListData } from '../../api/index'; 
 
 export default {
-    name: 'shopList',
+    name: 'caseList',
     data() {
         return {
             query: {

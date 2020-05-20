@@ -9,7 +9,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-input v-model="query.Courier" placeholder="快递员" class="handle-input mr10"></el-input>
+                <el-input v-model="query.courier" placeholder="快递员" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" @click="handleAdd">添加</el-button>
                 <el-button
@@ -33,7 +33,7 @@
                 <el-table-column prop="region" width="70" label="区域" align="center"></el-table-column>
                 <el-table-column prop="city" width="100" label="城市" align="center"></el-table-column>
                 <el-table-column prop="addr" label="地址" align="center"></el-table-column>
-                <el-table-column prop="Courier" label="快递员" width="100" align="center"></el-table-column>
+                <el-table-column prop="courier" label="快递员" width="100" align="center"></el-table-column>
                 <el-table-column prop="addrid" label="区域编号" width="80" align="center"></el-table-column>
                 <el-table-column prop="status" label="状态" width="70" align="center">
                     <template slot-scope="scope"> 
@@ -77,7 +77,7 @@
                     <el-input v-model="editAddrform.addr"></el-input>
                 </el-form-item>
                 <el-form-item label="快递员">
-                    <el-input v-model="editAddrform.Courier"></el-input>
+                    <el-input v-model="editAddrform.courier"></el-input>
                 </el-form-item>
                 <el-form-item label="区域编号">
                     <el-input v-model="editAddrform.addrid"></el-input>
@@ -107,7 +107,7 @@
                     <el-input v-model="addAddrform.addr"></el-input>
                 </el-form-item>
                 <el-form-item label="快递员">
-                    <el-input v-model="addAddrform.Courier"></el-input>
+                    <el-input v-model="addAddrform.courier"></el-input>
                 </el-form-item>
                 <el-form-item label="区域编号">
                     <el-input v-model="addAddrform.addrid"></el-input>

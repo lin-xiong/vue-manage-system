@@ -37,7 +37,7 @@ export default {
                 ps: ""
             },
             param: {
-                username: 'thd123',
+                username: 'JDthd',
                 password: '',
             },
             rules: {

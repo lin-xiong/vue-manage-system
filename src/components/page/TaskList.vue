@@ -152,7 +152,7 @@ import { shopListData } from '../../api/index';
 
 import { taskExeData } from '../../api/index';
 export default {
-    name: 'shopList',
+    name: 'taskList',
     data() {
         return {
             query: {
