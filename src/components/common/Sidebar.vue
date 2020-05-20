@@ -80,11 +80,6 @@ export default {
                     icon: 'el-icon-lx-global',
                     index: 'caseList',
                     title: '任务处理表'
-                },
-                {
-                    icon: 'el-icon-lx-home',
-                    index: 'dashboard',
-                    title: '系统首页'
                 }
             ]
         };
