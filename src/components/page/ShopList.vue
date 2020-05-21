@@ -24,9 +24,10 @@
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="shopName" label="店铺名"></el-table-column>
-                <el-table-column prop="tel" label="电话"></el-table-column>
-                <el-table-column prop="youHuiQuan" label="优惠券">
+                <el-table-column prop="shopName" label="店铺名" align="center"></el-table-column>
+                <el-table-column prop="shortName" label="备注简称" width="80" align="center"></el-table-column>
+                
+                <el-table-column prop="youHuiQuan" label="优惠券" align="center">
                     <!-- <template slot-scope="scope">
                         <span v-html="scope.row.youHuiQuan"></span>
                     </template> -->
@@ -34,8 +35,8 @@
                         <el-image  class="table-td-thumb" :src="scope.row.youHuiQuan"></el-image>
                     </template> -->
                 </el-table-column>
-
-                <el-table-column prop="status" label="状态" width="50"></el-table-column>
+                <el-table-column prop="tel" label="电话" align="center"></el-table-column>
+                <el-table-column prop="status" label="状态" width="50" align="center"></el-table-column>
                  
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
@@ -72,6 +73,9 @@
                 <el-form-item label="状态">
                     <el-input v-model="editShopform.status"></el-input>
                 </el-form-item>
+                <el-form-item label="备注简称">
+                    <el-input v-model="editShopform.shortName"></el-input>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
@@ -91,6 +95,9 @@
                 <el-form-item label="手机">
                     <el-input v-model="addShopform.tel"></el-input>
                 </el-form-item>
+                <el-form-item label="备注简称">
+                    <el-input v-model="addShopform.shortName"></el-input>
+                </el-form-item>
                 <el-form-item label="状态">
                     <el-input v-model="addShopform.status"></el-input>
                 </el-form-item>
@@ -108,6 +115,7 @@ import { shopListData } from '../../api/index';
 import { shopEditData } from '../../api/index';
 import { shopSearchData } from '../../api/index';
 import { shopAddData } from '../../api/index';
+
 export default {
     name: 'shopList',
     data() {
