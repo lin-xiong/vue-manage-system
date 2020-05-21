@@ -22,7 +22,6 @@
                 @selection-change="handleSelectionChange"
                 :stripe="true"
             >
-                <el-table-column type="selection" width="55" align="center"></el-table-column>
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
                 <el-table-column prop="shopName" label="店铺名" align="center"></el-table-column>
                 <el-table-column prop="shortName" label="备注简称" width="80" align="center"></el-table-column>
