@@ -90,8 +90,10 @@
                 <el-form-item label="单量">
                     <el-input v-model="editTaskform.count"></el-input>
                 </el-form-item>
-                <el-form-item label="地区">
-                    <el-input v-model="editTaskform.area"></el-input>
+                <el-form-item label="区域">
+                    <el-select v-model="editTaskform.area"  placeholder="请选择">
+                        <el-option v-for="item in multiRegion" :key="item.value" :label="item.label" :value="item.value" ></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="状态">
                     <el-input v-model="editTaskform.status"></el-input>
@@ -131,8 +133,10 @@
                 <el-form-item label="单量">
                     <el-input v-model="addTaskform.count"></el-input>
                 </el-form-item>
-                <el-form-item label="地区">
-                    <el-input v-model="addTaskform.area"></el-input>
+                <el-form-item label="区域">
+                    <el-select v-model="addTaskform.area"  placeholder="请选择">
+                        <el-option v-for="item in multiRegion" :key="item.value" :label="item.label" :value="item.value" ></el-option>
+                    </el-select>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -151,6 +155,7 @@ import { taskAddData } from '../../api/index';
 import { shopListData } from '../../api/index';
 
 import { taskExeData } from '../../api/index';
+import { regionListData } from '../../api/index';
 export default {
     name: 'taskList',
     data() {
@@ -168,6 +173,7 @@ export default {
             editTaskform:{},
             addTaskform:{},
             multiShop: [],
+            multiRegion: [],
             form: {},
             idx: -1,
             id: -1
@@ -179,6 +185,10 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
+            regionListData().then(res => {
+                this.multiRegion = res.region;
+                console.log(this.multiRegion);
+            });
             shopListData().then(res => {
                 console.log(res);
                 this.multiShop = res.data ;

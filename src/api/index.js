@@ -8,6 +8,13 @@ export const fetchData = query => {
     });
 };
 
+export const regionListData = query => {
+    return request({
+        url: './regionData.json',
+        method: 'get',
+        params: query
+    });
+};
 
 export const loginData = query => {
     return request({

@@ -68,7 +68,9 @@
             <el-form ref="editAddrform" :model="editAddrform" label-width="70px">
                 <el-input v-model="editAddrform.id" type="hidden"></el-input>
                 <el-form-item label="区域">
-                    <el-input v-model="editAddrform.region"></el-input>
+                    <el-select v-model="editAddrform.region"  placeholder="请选择">
+                        <el-option v-for="item in multiRegion" :key="item.value" :label="item.label" :value="item.value" ></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="城市">
                     <el-input v-model="editAddrform.city"></el-input>
@@ -98,7 +100,9 @@
         <el-dialog title="增加Addr" :visible.sync="addVisible" width="30%">
             <el-form ref="addAddrform" :model="addAddrform" label-width="70px">
                 <el-form-item label="区域">
-                    <el-input v-model="addAddrform.region"></el-input>
+                    <el-select v-model="addAddrform.region"  placeholder="请选择">
+                        <el-option v-for="item in multiRegion" :key="item.value" :label="item.label" :value="item.value" ></el-option>
+                    </el-select>
                 </el-form-item>
                 <el-form-item label="城市">
                     <el-input v-model="addAddrform.city"></el-input>
@@ -126,6 +130,7 @@ import { addrListData } from '../../api/index';
 import { addrEditData } from '../../api/index';
 import { addrSearchData } from '../../api/index';
 import { addrAddData } from '../../api/index';
+import { regionListData } from '../../api/index';
 
 export default {
     name: 'addrList',
@@ -143,7 +148,7 @@ export default {
             pageTotal: 0,
             editAddrform:{},
             addAddrform:{},
-            multiShop: [],
+            multiRegion: [],
             form: {},
             idx: -1,
             id: -1
@@ -155,12 +160,15 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
+            regionListData().then(res => {
+                this.multiRegion = res.region;
+                console.log(this.multiRegion);
+            });
             addrListData(this.query).then(res => {
                 console.log(res);
                 this.tableData = res.data;
                 this.pageTotal = res.pageTotal ;
             });
-            
         },
         // 触发搜索按钮
         handleSearch() {
@@ -266,16 +274,6 @@ export default {
                 }
                 let dt = new Date(data)
                  return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate();
-        },
-        formatShopName(row, column) {
-            // 获取单元格数据
-                let data = row[column.property];
-                if(this.multiShop == null)
-                    return null;
-                for (let i = 0; i < this.multiShop.length; i++) { 
-                    if(data==this.multiShop[i].id)
-                        return this.multiShop[i].shopName;
-                }
         }
     }
 };

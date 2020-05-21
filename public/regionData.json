@@ -1,0 +1,32 @@
+{
+    "region":[
+        {
+            "value": "广州",
+            "label": "广州仓"
+        },
+        {
+            "value": "北京",
+            "label": "北京仓"
+        },
+        {
+            "value": "上海",
+            "label": "上海仓"
+        },
+        {
+            "value": "陕西",
+            "label": "陕西仓"
+        },
+        {
+            "value": "四川",
+            "label": "四川仓"
+        },
+        {
+            "value": "沈阳",
+            "label": "沈阳仓"
+        },
+        {
+            "value": "湖北",
+            "label": "湖北仓"
+        }],
+    "pageTotal": 7
+ }
