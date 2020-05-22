@@ -34,8 +34,16 @@
                         <el-image  class="table-td-thumb" :src="scope.row.youHuiQuan"></el-image>
                     </template> -->
                 </el-table-column>
+                <el-table-column prop="courierCount" label="每区快递数"  :formatter="formatCourierCount" width="95" align="center">
+                  
+                </el-table-column>
                 <el-table-column prop="tel" label="电话" align="center"></el-table-column>
-                <el-table-column prop="status" label="状态" width="50" align="center"></el-table-column>
+                <el-table-column prop="status" label="状态" width="50" align="center">
+                    <template slot-scope="scope"> 
+                        <span v-if="scope.row.status==1">生效</span>
+                        <span v-if="scope.row.status==0">失效</span>
+                    </template>
+                </el-table-column>
                  
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
@@ -61,7 +69,7 @@
 
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="editShopform" :model="editShopform" label-width="70px">
+            <el-form ref="editShopform" :model="editShopform" label-width="90px">
                 <el-input v-model="editShopform.id" type="hidden"></el-input>
                 <el-form-item label="店铺名称">
                     <el-input v-model="editShopform.shopName"></el-input>
@@ -69,11 +77,14 @@
                 <el-form-item label="优惠券">
                     <el-input v-model="editShopform.youHuiQuan"></el-input>
                 </el-form-item>
-                <el-form-item label="状态">
-                    <el-input v-model="editShopform.status"></el-input>
-                </el-form-item>
                 <el-form-item label="备注简称">
                     <el-input v-model="editShopform.shortName"></el-input>
+                </el-form-item>
+                <el-form-item label="每区快递数">
+                    <el-input v-model="editShopform.courierCount"></el-input>
+                </el-form-item>
+                <el-form-item label="状态">
+                    <el-input v-model="editShopform.status"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -84,7 +95,7 @@
 
         <!-- 增加商户弹出框 -->
         <el-dialog title="增加商户" :visible.sync="addVisible" width="30%">
-            <el-form ref="addShopform" :model="addShopform" label-width="70px">
+            <el-form ref="addShopform" :model="addShopform" label-width="90px">
                 <el-form-item label="店铺名称">
                     <el-input v-model="addShopform.shopName"></el-input>
                 </el-form-item>
@@ -96,6 +107,9 @@
                 </el-form-item>
                 <el-form-item label="备注简称">
                     <el-input v-model="addShopform.shortName"></el-input>
+                </el-form-item>
+                <el-form-item label="每区快递数">
+                    <el-input v-model="addShopform.courierCount"></el-input>
                 </el-form-item>
                 <el-form-item label="状态">
                     <el-input v-model="addShopform.status"></el-input>
@@ -232,6 +246,14 @@ export default {
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
             this.getData();
+        },
+        formatCourierCount(row, column) {
+            // 获取单元格数据
+                let data = row[column.property];
+                if(data == 0)
+                    return "全部";
+                else
+                    return "每区分配"+data+"个快递";
         }
     }
 };
