@@ -21,7 +21,7 @@
                     <template slot-scope="scope"> 
                         <span v-if="scope.row.status==2">任务被拉取</span>
                         <span v-if="scope.row.status==3">加购完成</span>
-                        <span v-if="scope.row.status==4">加购失败</span>
+                        <span v-if="scope.row.status==4">开始执行</span>
                         <span v-if="scope.row.status==5">取优惠券成功</span>
                         <span v-if="scope.row.status==6">取优惠券失败</span>
                         <span v-if="scope.row.status==7">设置收件人失败</span>
