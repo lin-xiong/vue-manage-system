@@ -17,21 +17,10 @@
                 <el-table-column prop="sku"  label="SKU" align="center"></el-table-column>
                 <el-table-column prop="keyword" label="关键字" align="center"></el-table-column>
                 <el-table-column prop="telNo" label="操作手机" width="80" align="center"></el-table-column> 
-                <el-table-column prop="status" label="状态" width="120" align="center">
-                    <template slot-scope="scope"> 
-                        <span v-if="scope.row.status==2">任务被拉取</span>
-                        <span v-if="scope.row.status==3">加购完成</span>
-                        <span v-if="scope.row.status==4">开始执行</span>
-                        <span v-if="scope.row.status==5">取优惠券成功</span>
-                        <span v-if="scope.row.status==6">取优惠券失败</span>
-                        <span v-if="scope.row.status==7">设置收件人失败</span>
-                        <span v-if="scope.row.status==8">下单成功</span>
-                        <span v-if="scope.row.status==9">下单失败</span>
-                        <span v-if="scope.row.status==10">代付连接完成</span>
-                        <span v-if="scope.row.status==11">完成操作</span>
-                    </template>
+                <el-table-column prop="status" label="状态" width="120" align="center" :formatter="formatStatus" >
+                    
                 </el-table-column>
-                <el-table-column prop="exeTime" label="执行时间" align="center"></el-table-column>
+                <el-table-column prop="exeTime" label="执行时间" align="center" :formatter="formatDate"></el-table-column>
                
             </el-table>
  
@@ -183,7 +172,7 @@ export default {
                 return null
             }
             let dt = new Date(data)
-            return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate();
+            return dt.getFullYear() + '-' + (dt.getMonth() +1) + '-' + dt.getDate()+" "+dt.getHours()+":"+dt.getMinutes()+":"+dt.getSeconds();
         },
         formatShopName(row, column) {
             // 获取单元格数据
@@ -194,6 +183,56 @@ export default {
                     if(data==this.multiShop[i].id)
                         return this.multiShop[i].shopName;
                 }
+        },
+        formatStatus(row, column) {
+            // 获取单元格数据
+            // <template slot-scope="scope"> 
+            //             <span v-if="scope.row.status==2">任务被拉取</span>
+            //             <span v-if="scope.row.status>=200 && scope.row.status<300">开始执行</span>
+            //             <span v-if="scope.row.status>=300">执行 "scope.row.status-300"</span>
+            //             <span v-if="scope.row.status==4">开始执行</span>
+            //             <span v-if="scope.row.status==5">取优惠券成功</span>
+            //             <span v-if="scope.row.status==6">取优惠券失败</span>
+            //             <span v-if="scope.row.status==7">设置收件人失败</span>
+            //             <span v-if="scope.row.status==8">下单成功</span>
+            //             <span v-if="scope.row.status==9">下单失败</span>
+            //             <span v-if="scope.row.status==10">代付连接完成</span>
+            //             <span v-if="scope.row.status==11">完成操作</span>
+            //         </template>
+                let data = row[column.property];
+                if(data == 2) return "任务被拉取";
+                if(data==200) return "开始执行";
+                if(data>=300 && data<400) return "执行第"+(data-300)+"个SKU";
+                if(data==400) return "进入结算";
+                if(data==401) return "已提交地址";
+                if(data==800) return "进入付款";
+                if(data==811) return "支付异常";
+                if(data==1000) return "完成";
+        },
+        //定义导出Excel表格事件
+        exportExcel() {
+        /* 从表生成工作簿对象 */
+        var wb = XLSX.utils.table_to_book(document.querySelector("#out-table"));
+        /* 获取二进制字符串作为输出 */
+        var wbout = XLSX.write(wb, {
+            bookType: "xlsx",
+            bookSST: true,
+            type: "array"
+        });
+        try {
+            FileSaver.saveAs(
+            //Blob 对象表示一个不可变、原始数据的类文件对象。
+            //Blob 表示的不一定是JavaScript原生格式的数据。
+            //File 接口基于Blob，继承了 blob 的功能并将其扩展使其支持用户系统上的文件。
+            //返回一个新创建的 Blob 对象，其内容由参数中给定的数组串联组成。
+            new Blob([wbout], { type: "application/octet-stream" }),
+            //设置导出文件名称
+            "sheetjs.xlsx"
+            );
+        } catch (e) {
+            if (typeof console !== "undefined") console.log(e, wbout);
+        }
+        return wbout;
         }
     },
     deactivated()

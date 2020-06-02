@@ -34,10 +34,10 @@
                         <el-image  class="table-td-thumb" :src="scope.row.youHuiQuan"></el-image>
                     </template> -->
                 </el-table-column>
-                <el-table-column prop="courierCount" label="每区快递数"  :formatter="formatCourierCount" width="95" align="center">
+                <el-table-column prop="courierCount" label="每区快递数"  :formatter="formatCourierCount" align="center">
                   
                 </el-table-column>
-                <el-table-column prop="tel" label="电话" align="center"></el-table-column>
+                <el-table-column prop="tel" label="电话" align="center" width="90" ></el-table-column>
                 <el-table-column prop="status" label="状态" width="50" align="center">
                     <template slot-scope="scope"> 
                         <span v-if="scope.row.status==1">生效</span>

@@ -26,8 +26,10 @@
                 <el-table-column prop="shopId" :formatter="formatShopName" label="店铺名" align="center"></el-table-column>
                 <el-table-column prop="sku" label="sku" align="center"></el-table-column>
                 <el-table-column prop="keyword" label="关键词" align="center"></el-table-column>
+                <el-table-column prop="prices" label="卡价格" align="center"></el-table-column>
                 <el-table-column prop="count" label="单量" width="50" align="center"></el-table-column>
-                <el-table-column prop="exeDate" :formatter="formatDate" label="执行日期" width="110" align="center"></el-table-column>
+                <el-table-column prop="beginTime" :formatter="formatDate" label="开始执行时间" width="110" align="center"></el-table-column>
+                <el-table-column prop="endTime" :formatter="formatDate" label="结束执行时间" width="110" align="center"></el-table-column>
                 <el-table-column prop="area" label="地区" width="100" align="center"></el-table-column>
 
                 <el-table-column label="操作" width="120" align="center" prop="status">
@@ -37,20 +39,6 @@
                             icon="el-icon-lx-copy"
                             @click="handleCopy(scope.$index, scope.row)" 
                         >复制</el-button>
-                        <el-button
-                            type="text"
-                            icon="el-icon-share"
-                            class="red"
-                            @click="handleStop(scope.$index, scope.row)"
-                            v-show='scope.row.status==2'
-                        >暂停</el-button><!--&& Date(scope.row.exeDate)>= Date("yyyy/MM/dd")-->
-                             <el-button
-                            type="text"
-                            icon="el-icon-share"
-                            class="red"
-                            @click="handleRerun(scope.$index, scope.row)"
-                            v-show="scope.row.status==-1"
-                        >恢复</el-button>
                         <br />
                         <el-button
                             type="text"
@@ -65,7 +53,6 @@
                             @click="handleExe(scope.$index, scope.row)"
                             v-show="scope.row.status==1"
                         >执行</el-button>
-                        
                     </template>
                 </el-table-column>
             </el-table>
@@ -91,14 +78,30 @@
                 <el-form-item label="关键词">
                     <el-input v-model="editTaskform.keyword"></el-input>
                 </el-form-item>
-                <el-form-item label="执行日期">
-                        <el-col :span="11">
+                <el-form-item label="卡价格">
+                    <el-input v-model="editTaskform.prices"></el-input>
+                </el-form-item>
+                <el-form-item label="开始时间">
+                        <el-col :span="16">
                             <el-date-picker
-                                type="date"
-                                placeholder="执行日期"
-                                v-model="editTaskform.exeDate"
-                                value-format="yyyy-MM-dd"
+                                type="datetime"
+                                placeholder="开始时间"
+                                v-model="editTaskform.beginTime"
+                                value-format="yyyy-MM-dd HH:mm:ss"
                                 style="width: 100%;"
+                                :picker-options="pickerBeginDateBefore"
+                            ></el-date-picker>
+                        </el-col>
+                    </el-form-item>
+                    <el-form-item label="结束时间">
+                        <el-col :span="16">
+                            <el-date-picker
+                                type="datetime"
+                                placeholder="结束时间"
+                                v-model="editTaskform.endTime"
+                                value-format="yyyy-MM-dd HH:mm:ss"
+                                style="width: 100%;"
+                                :picker-options="pickerBeginDateAfter"
                             ></el-date-picker>
                         </el-col>
                     </el-form-item>
@@ -134,14 +137,30 @@
                 <el-form-item label="关键词">
                     <el-input v-model="addTaskform.keyword"></el-input>
                 </el-form-item>
-                <el-form-item label="执行日期">
-                        <el-col :span="11">
+                <el-form-item label="卡价格">
+                    <el-input v-model="addTaskform.prices"></el-input>
+                </el-form-item>
+                <el-form-item label="开始时间">
+                        <el-col :span="16">
                             <el-date-picker
-                                type="date"
-                                placeholder="执行日期"
-                                v-model="addTaskform.exeDate"
-                                value-format="yyyy-MM-dd"
+                                type="datetime"
+                                placeholder="开始时间"
+                                v-model="addTaskform.beginTime"
+                                value-format="yyyy-MM-dd HH:mm:ss"
                                 style="width: 100%;"
+                               :picker-options="pickerBeginDateBefore"
+                            ></el-date-picker>
+                        </el-col>
+                    </el-form-item>
+                    <el-form-item label="结束时间">
+                        <el-col :span="16">
+                            <el-date-picker
+                                type="datetime"
+                                placeholder="结束时间"
+                                v-model="addTaskform.endTime"
+                                value-format="yyyy-MM-dd HH:mm:ss"
+                                style="width: 100%;"
+                                :picker-options="pickerBeginDateAfter"
                             ></el-date-picker>
                         </el-col>
                     </el-form-item>
@@ -191,7 +210,32 @@ export default {
             multiRegion: [],
             form: {},
             idx: -1,
-            id: -1
+            id: -1//,
+        //   pickerBeginDateBefore: {
+        //     disabledDate: (time) => {
+        //       if(this.filters.column.create_end_date === ''){
+        //         return time.getTime() < Date.now() - 8.64e7
+        //       }else {
+        //         let beginDateVal = this.filters.column.create_end_date;
+        //         if (beginDateVal) {
+        //           return time.getTime() > beginDateVal || time.getTime() < Date.now() - 8.64e7;
+        //         }
+        //       }
+        //     }
+        //   },
+        //   pickerBeginDateAfter: {
+        //     disabledDate: (time) => {
+        //       if(this.filters.column.create_start_date === ''){
+        //         this.flag = true
+        //         return time.getTime() < Date.now() - 8.64e7
+        //       }else {
+        //         let beginDateVal = this.filters.column.create_start_date;
+        //         if (beginDateVal) {
+        //           return time.getTime() < beginDateVal || time.getTime() < Date.now() - 8.64e7;
+        //         }
+        //       }
+        //     }
+        //   }
         };
     },
     created() {
@@ -236,38 +280,6 @@ export default {
                     if(res>=1){
                         this.$message.success('执行成功');
                         row.status=2;
-                    }
-                });
-            }).catch(() => {});
-        },
-        // 执行操作
-        handleStop(index, row) {
-            // 二次确认执行
-            this.$confirm('确定要停止'+row.shopId+row.keyword+'吗？', '提示', {
-                type: 'warning'
-            }).then(res => {
-                this.idx = index; 
-                row.status=-1;
-                taskEditData(row).then(res => {
-                    console.log(res);
-                    if(res>=1){
-                        this.$message.success('执行成功');
-                    }
-                });
-            }).catch(() => {});
-        },
-        // 执行操作
-        handleRerun(index, row) {
-            // 二次确认执行
-            this.$confirm('确定要继续运行'+row.shopName+row.keyword+'吗？', '提示', {
-                type: 'warning'
-            }).then(res => {
-                this.idx = index; 
-                row.status=2;
-                taskEditData(row).then(res => {
-                    console.log(res);
-                    if(res>=1){
-                        this.$message.success('执行成功');
                     }
                 });
             }).catch(() => {});
@@ -349,7 +361,9 @@ export default {
                     return null
                 }
                 let dt = new Date(data)
-                 return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate();
+                //return dt.Format("yyyy-MM-dd hh:mm:ss")
+                return dt.toLocaleString(); 
+                //return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate() + " "+dt.getHours()+":"+dt.getMinutes()+":"+dt.getSeconds();
         },
         formatShopName(row, column) {
             // 获取单元格数据
