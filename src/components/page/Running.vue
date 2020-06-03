@@ -1,29 +1,6 @@
 <template>
     <div>
         <div class="container" style="padding:0px;">
-            <div class="handle-box" style="padding:8px 0px 0px 5px;">
-                <el-input v-model="query.shopName" width="20" placeholder="商铺名称" class="handle-input mr10"></el-input>
-             <el-span name='begin'>开始日期：</el-span>
-                            <el-date-picker
-                                type="date"
-                                placeholder="开始日期"
-                                v-model="query.begin"
-                                value-format="yyyy-MM-dd"
-                                width="10"
-                            ></el-date-picker>
-              
-           <el-span  name='end'>结束日期：</el-span>
-                   
-                            <el-date-picker
-                                type="date"
-                                placeholder="结束日期"
-                                v-model="query.end"
-                                value-format="yyyy-MM-dd"
-                            ></el-date-picker>
-                  
-                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-                <el-button type="primary" icon="el-icon-add" @click="exportExcel">导出</el-button>
-            </div>
             <el-table
                 :data="tableData"
                 :default-sort = "{prop: 'exeTime', order: 'descending'}"
@@ -34,17 +11,16 @@
                 @selection-change="handleSelectionChange"
                 :height="700"
                 :stripe="true"
-                id="caseListTable"
             >
                 <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
                 <el-table-column prop="shopName"  label="店铺名称" align="center"></el-table-column>
-                <el-table-column prop="keyword" label="关键词" align="center"></el-table-column>
                 <el-table-column prop="sku"  label="SKU" align="center"></el-table-column>
-                 <el-table-column prop="tel"  label="手机号" width="110" align="center"></el-table-column>
-                <el-table-column prop="orderid"  label="订单号" width="120" align="center"></el-table-column>
+                <el-table-column prop="keyword" label="关键字" align="center"></el-table-column>
                 <el-table-column prop="telNo" label="操作手机" width="80" align="center"></el-table-column> 
-                <el-table-column prop="status" label="状态" width="120" align="center" :formatter="formatStatus" ></el-table-column>
-                <el-table-column prop="addr" label="收货地址" align="center" ></el-table-column>
+                <el-table-column prop="status" label="状态" width="120" align="center" :formatter="formatStatus" >
+                    
+                </el-table-column>
+                <el-table-column prop="exeTime" label="执行时间" align="center" :formatter="formatDate"></el-table-column>
                
             </el-table>
  
@@ -54,15 +30,16 @@
 </template>
 
 <script>
-import { exportOrderData } from '../../api/index'; 
+import { CaseListData } from '../../api/index'; 
 import FileSaver from 'file-saver';
 import XLSX from 'xlsx';
 export default {
-    name: 'exportOrderData',
+    name: 'caseList',
     data() {
         return {
             query: {
-                status:1000
+                pageIndex: 1,
+                pageSize: 10
             },
             tableData: [],
             multipleSelection: [],
@@ -89,25 +66,24 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            this.query.begin=Date("yyyy-MM-dd");
-            this.query.end=Date("yyyy-MM-dd");
-            console.log(this.query); 
-            exportOrderData(this.query).then(res => {//this.tableData
+            CaseListData().then(res => {//this.tableData
                 console.log(res); 
                 //this.$set(this.tableData, this.idx, this.editAddrform);
                 this.tableData = res.data;
             }).finally(res=>{
-                    
+                    this.setTimer=setTimeout(() => {
+                        this.getData();
+                    }, 2000);
             });
             
         },
         // 触发搜索按钮
         handleSearch() {
-            //this.$set(this.query, 'pageIndex', 1);
+            this.$set(this.query, 'pageIndex', 1);
             addrSearchData(this.query).then(res => {
                 console.log(res);
                 this.tableData = res.data;
-                //this.pageTotal = res.pageTotal ;
+                this.pageTotal = res.pageTotal ;
             });
         },
         // 执行操作
@@ -233,31 +209,6 @@ export default {
                 if(data==800) return "进入付款";
                 if(data==811) return "支付异常";
                 if(data==1000) return "完成";
-        },
-        //定义导出Excel表格事件
-        exportExcel() {
-        /* 从表生成工作簿对象 */
-        var wb = XLSX.utils.table_to_book(document.querySelector("#caseListTable"));
-        /* 获取二进制字符串作为输出 */
-        var wbout = XLSX.write(wb, {
-            bookType: "xlsx",
-            bookSST: true,
-            type: "array"
-        });
-        try {
-            FileSaver.saveAs(
-            //Blob 对象表示一个不可变、原始数据的类文件对象。
-            //Blob 表示的不一定是JavaScript原生格式的数据。
-            //File 接口基于Blob，继承了 blob 的功能并将其扩展使其支持用户系统上的文件。
-            //返回一个新创建的 Blob 对象，其内容由参数中给定的数组串联组成。
-            new Blob([wbout], { type: "application/octet-stream" }),
-            //设置导出文件名称
-            "sheetjs.xlsx"
-            );
-        } catch (e) {
-            if (typeof console !== "undefined") console.log(e, wbout);
-        }
-        return wbout;
         }
     },
     deactivated()

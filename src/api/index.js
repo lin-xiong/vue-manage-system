@@ -180,3 +180,12 @@ export const CaseListData = query => {
         params: query
     });
 };
+
+//导出数据
+export const exportOrderData = query => {
+    return request({
+        url: '/api/Order/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/export",
+        method: 'get',
+        params: query
+    });
+};
