@@ -40,9 +40,14 @@ export default new Router({
                     meta: { title: '订单列表' , permission: true }
                 },
                 {
+                    path: '/Running',
+                    component: () => import(/* webpackChunkName: "icon" */ '../components/page/Running.vue'),
+                    meta: { title: '实时监控台' , permission: true }
+                },
+                {
                     path: '/caseList',
                     component: () => import(/* webpackChunkName: "icon" */ '../components/page/CaseList.vue'),
-                    meta: { title: '实时执行表' , permission: true }
+                    meta: { title: '订单导出' , permission: true }
                 },
                 {
                     // 权限页面

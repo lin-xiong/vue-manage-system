@@ -26,6 +26,7 @@
                 <el-table-column prop="shopId" :formatter="formatShopName" label="店铺名" align="center"></el-table-column>
                 <el-table-column prop="sku" label="sku" align="center"></el-table-column>
                 <el-table-column prop="keyword" label="关键词" align="center"></el-table-column>
+                <el-table-column prop="prices" label="价格" align="center"></el-table-column>
                 <el-table-column prop="count" label="单量" width="50" align="center"></el-table-column>
                 <el-table-column prop="exeDate" :formatter="formatDate" label="执行日期" width="110" align="center"></el-table-column>
                 <el-table-column prop="area" label="地区" width="100" align="center"></el-table-column>
@@ -91,6 +92,9 @@
                 <el-form-item label="关键词">
                     <el-input v-model="editTaskform.keyword"></el-input>
                 </el-form-item>
+                <el-form-item label="价格">
+                    <el-input v-model="editTaskform.prices"></el-input>
+                </el-form-item>
                 <el-form-item label="执行日期">
                         <el-col :span="11">
                             <el-date-picker
@@ -133,6 +137,9 @@
                 </el-form-item>
                 <el-form-item label="关键词">
                     <el-input v-model="addTaskform.keyword"></el-input>
+                </el-form-item>
+                <el-form-item label="价格">
+                    <el-input v-model="addTaskform.prices"></el-input>
                 </el-form-item>
                 <el-form-item label="执行日期">
                         <el-col :span="11">
@@ -246,12 +253,12 @@ export default {
             this.$confirm('确定要停止'+row.shopId+row.keyword+'吗？', '提示', {
                 type: 'warning'
             }).then(res => {
-                this.idx = index; 
+                this.idx = index;
                 row.status=-1;
                 taskEditData(row).then(res => {
                     console.log(res);
                     if(res>=1){
-                        this.$message.success('执行成功');
+                        this.$message.success('停止执行成功');
                     }
                 });
             }).catch(() => {});
@@ -267,7 +274,7 @@ export default {
                 taskEditData(row).then(res => {
                     console.log(res);
                     if(res>=1){
-                        this.$message.success('执行成功');
+                        this.$message.success('继续执行成功');
                     }
                 });
             }).catch(() => {});

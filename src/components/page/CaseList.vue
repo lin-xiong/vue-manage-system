@@ -2,27 +2,36 @@
     <div>
         <div class="container" style="padding:0px;">
             <div class="handle-box" style="padding:8px 0px 0px 5px;">
-                <el-input v-model="query.shopName" width="20" placeholder="商铺名称" class="handle-input mr10"></el-input>
-             <el-span name='begin'>开始日期：</el-span>
-                            <el-date-picker
-                                type="date"
-                                placeholder="开始日期"
-                                v-model="query.begin"
-                                value-format="yyyy-MM-dd"
-                                width="10"
-                            ></el-date-picker>
-              
-           <el-span  name='end'>结束日期：</el-span>
-                   
-                            <el-date-picker
-                                type="date"
-                                placeholder="结束日期"
-                                v-model="query.end"
-                                value-format="yyyy-MM-dd"
-                            ></el-date-picker>
-                  
-                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                <el-select v-model="query.shopName"  placeholder="选择店铺">
+                    <el-option v-for="item in multiShop" :key="item.id" :label="item.shopName" :value="item.shopName" ></el-option>
+                </el-select>
+                <el-date-picker
+                    type="date"
+                    placeholder="开始日期"
+                    v-model="query.begin"
+                    value-format="yyyy-MM-dd"
+                    width="10"
+                ></el-date-picker><span>-</span>
+                <el-date-picker
+                    type="date"
+                    placeholder="结束日期"
+                    v-model="query.end"
+                    value-format="yyyy-MM-dd"
+                ></el-date-picker>
+                <!-- <el-date-picker
+                    v-model="pickerDate"
+                    type="daterange"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    :picker-options="pickerBeginDateBefore"
+                    :default-value="timeDefaultShow"
+                    end-placeholder="结束日期"
+                    size="small"
+                    class="margin-right-10">
+                </el-date-picker>  -->
+                <el-button style="margin-left:10px" type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" @click="exportExcel">导出</el-button>
+                <span style="padding:8px 0px 0px 5px;">总计:{{totalCount}}</span>
             </div>
             <el-table
                 :data="tableData"
@@ -40,8 +49,9 @@
                 <el-table-column prop="shopName"  label="店铺名称" align="center"></el-table-column>
                 <el-table-column prop="keyword" label="关键词" align="center"></el-table-column>
                 <el-table-column prop="sku"  label="SKU" align="center"></el-table-column>
-                 <el-table-column prop="tel"  label="手机号" width="110" align="center"></el-table-column>
+                <el-table-column prop="tel"  label="手机号" width="110" align="center"></el-table-column>
                 <el-table-column prop="orderid"  label="订单号" width="120" align="center"></el-table-column>
+                <el-table-column prop="price"  label="价格" align="center"></el-table-column>
                 <el-table-column prop="telNo" label="操作手机" width="80" align="center"></el-table-column> 
                 <el-table-column prop="status" label="状态" width="120" align="center" :formatter="formatStatus" ></el-table-column>
                 <el-table-column prop="addr" label="收货地址" align="center" ></el-table-column>
@@ -54,7 +64,8 @@
 </template>
 
 <script>
-import { exportOrderData } from '../../api/index'; 
+import { exportOrderData } from '../../api/index';
+import { shopListData } from '../../api/index';
 import FileSaver from 'file-saver';
 import XLSX from 'xlsx';
 export default {
@@ -77,7 +88,16 @@ export default {
             idx: -1,
             id: -1,
             setTimer:null,
-            getDataOnce:true
+            getDataOnce:true,
+            multiShop: [],
+            totalCount:0
+            // pickerBeginDateBefore:{
+            //     disabledDate(time) {
+            //         return time.getTime() > Date.now();
+            //     }
+            // },
+            // timeDefaultShow:new Date()
+
         };
     },
     created() {
@@ -89,25 +109,37 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            this.query.begin=Date("yyyy-MM-dd");
-            this.query.end=Date("yyyy-MM-dd");
-            console.log(this.query); 
+//this.$set(this.query, 'end', Date("yyyy-MM-dd"));
+//queryBegin.timeDefaultShow= new Date();
+            shopListData().then(res => {
+                console.log(res);
+                this.multiShop = res.data ;
+                var allshop= {id:0,shopName:'全部'};
+                this.multiShop.splice(0,0,allshop);
+                //this.$set()multiShop.push(allshop);
+                //this.multiShop.push(res.data);
+            });
+            //this.$set(this.query, 'end', Date("yyyy-MM-dd"));
             exportOrderData(this.query).then(res => {//this.tableData
                 console.log(res); 
                 //this.$set(this.tableData, this.idx, this.editAddrform);
                 this.tableData = res.data;
             }).finally(res=>{
-                    
+                this.totalCount=res.data.length;
             });
             
         },
         // 触发搜索按钮
         handleSearch() {
             //this.$set(this.query, 'pageIndex', 1);
-            addrSearchData(this.query).then(res => {
+            console.log(this.query); 
+            if (this.query.shopName=='全部')
+                this.$set(this.query, 'shopName', '');
+            exportOrderData(this.query).then(res => {
                 console.log(res);
                 this.tableData = res.data;
                 //this.pageTotal = res.pageTotal ;
+                this.totalCount=res.data.length;
             });
         },
         // 执行操作
@@ -209,6 +241,14 @@ export default {
                         return this.multiShop[i].shopName;
                 }
         },
+        formatAddr(row, column) {
+            // 获取单元格数据
+                let data = row[column.property];
+                if (data)
+                return data.substr(3,4);
+                else
+                return "";
+        },
         formatStatus(row, column) {
             // 获取单元格数据
             // <template slot-scope="scope"> 
@@ -244,6 +284,13 @@ export default {
             bookSST: true,
             type: "array"
         });
+        var fn="";
+        if (this.query.shopName!=null) fn=fn+this.query.shopName+"_";
+        if(this.query.begin==this.query.end) 
+            fn=fn+this.query.begin;
+        else
+            fn=fn+this.query.begin+"到"+this.query.end;
+        fn=fn+".xlsx";
         try {
             FileSaver.saveAs(
             //Blob 对象表示一个不可变、原始数据的类文件对象。
@@ -252,7 +299,7 @@ export default {
             //返回一个新创建的 Blob 对象，其内容由参数中给定的数组串联组成。
             new Blob([wbout], { type: "application/octet-stream" }),
             //设置导出文件名称
-            "sheetjs.xlsx"
+            fn
             );
         } catch (e) {
             if (typeof console !== "undefined") console.log(e, wbout);

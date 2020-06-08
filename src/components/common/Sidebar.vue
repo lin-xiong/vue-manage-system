@@ -73,13 +73,13 @@ export default {
                 },
                 {
                     icon: 'el-icon-lx-cascades',
-                    index: 'orderList',
-                    title: '订单处理表'
+                    index: 'Running',
+                    title: '订单实时监控'
                 },
                 {
                     icon: 'el-icon-lx-global',
                     index: 'caseList',
-                    title: '任务处理表'
+                    title: '订单导出表'
                 }
             ]
         };
