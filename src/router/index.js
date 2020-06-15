@@ -73,6 +73,11 @@ export default new Router({
             meta: { title: '登录' }
         },
         {
+            path: '/ReturnAddrByTel',
+            component: () => import(/* webpackChunkName: "login" */ '../components/page/ReturnAddrByTel.vue'),
+            meta: { title: '登录' }
+        },
+        {
             path: '*',
             redirect: '/404'
         }

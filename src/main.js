@@ -25,7 +25,8 @@ router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title} | thd-manage-system`;
     //const role = localStorage.getItem('ms_username');
     const p = localStorage.getItem('ms_paths');
-    if (!p && to.path !== '/login') {
+    alert(to.path);
+    if (!p && to.path !== '/login' && to.path !== '/ReturnAddrByTel') {
         next('/login');
     } else if (to.meta.permission) {
         // 如果是管理员权限则可进入，这里只是简单的模拟管理员权限而已
