@@ -14,7 +14,7 @@ module.exports = {
                 //}
              },
              '/cc':{
-                target:'https://tcc.taobao.com/',
+                target:'https://tcc.taobao.com',
                 //target:'https://localhost:5001',
                 //target:'https://api.ss1.relink-tech.cn',
                 changeOrigin:true,

@@ -25,7 +25,6 @@ router.beforeEach((to, from, next) => {
     document.title = `${to.meta.title} | thd-manage-system`;
     //const role = localStorage.getItem('ms_username');
     const p = localStorage.getItem('ms_paths');
-    alert(to.path);
     if (!p && to.path !== '/login' && to.path !== '/ReturnAddrByTel') {
         next('/login');
     } else if (to.meta.permission) {
