@@ -54,10 +54,40 @@
                 <el-table-column prop="price"  label="价格" align="center"></el-table-column>
                 <el-table-column prop="telNo" label="操作手机" width="80" align="center"></el-table-column> 
                 <el-table-column prop="status" label="状态" width="120" align="center" :formatter="formatStatus" ></el-table-column>
-                <el-table-column prop="addr" label="收货地址" align="center" ></el-table-column>
+                <el-table-column prop="addr" label="收货地址" align="center" :formatter="formatAddr"></el-table-column>
                
             </el-table>
  
+            <el-table
+                :data="tableData"
+                :default-sort = "{prop: 'exeTime', order: 'descending'}"
+                border
+                class="table"
+                ref="multipleTable"
+                header-cell-class-name="table-header"
+                @selection-change="handleSelectionChange"
+                :height="700"
+                :stripe="true"
+                v-show="false"
+                id="caseListTableExport"
+            >
+                <el-table-column prop="exeDate" label="日期" width="80" align="center"></el-table-column>
+                <el-table-column prop="shopName"  label="店铺名称" align="center"></el-table-column>
+                <el-table-column prop="count1"  label="数量" align="center"></el-table-column>
+                <el-table-column prop="keyword" label="关键词" align="center"></el-table-column>
+                <el-table-column prop="sku"  label="SKU" align="center"></el-table-column>
+                <el-table-column prop="tel"  label="手机号" width="110" align="center"></el-table-column>
+                <el-table-column prop="orderid"  label="订单号1" width="120" align="center"></el-table-column>
+                <el-table-column prop="orderid"  label="订单号2" width="120" align="center"></el-table-column>
+                <el-table-column prop="price"  label="价格" align="center"></el-table-column>
+                <el-table-column prop="shortName" label="商品备注" width="80" align="center"></el-table-column> 
+                <el-table-column prop="telNo" label="手机编号" width="80" align="center"></el-table-column> 
+                <el-table-column prop="status1" label="操作员" width="120" align="center"  ></el-table-column>
+                <el-table-column prop="status1" label="快递员" width="120" align="center"  ></el-table-column>
+                <el-table-column prop="addr" label="收货地址" align="center" ></el-table-column>
+               
+            </el-table>
+
         </div>
 
     </div>
@@ -277,7 +307,7 @@ export default {
         //定义导出Excel表格事件
         exportExcel() {
         /* 从表生成工作簿对象 */
-        var wb = XLSX.utils.table_to_book(document.querySelector("#caseListTable"));
+        var wb = XLSX.utils.table_to_book(document.querySelector("#caseListTableExport"));
         /* 获取二进制字符串作为输出 */
         var wbout = XLSX.write(wb, {
             bookType: "xlsx",
