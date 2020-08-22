@@ -1,6 +1,4 @@
-<template>
-<pre>{{addr }}</pre>
-</template>
+<div id="app"></div>
 <script>
 import { addrLevel3Data } from '../../api/addr';
 import { addrLevel4Data } from '../../api/addr';
@@ -8,7 +6,16 @@ import { telAddrData } from '../../api/addr';
 import { getRandom } from '../../api/addr';
 import { randomNum } from '../../api/addr';
 import { getAreaName } from '../../api/addr';
-
+import Vue from 'vue';
+new Vue({
+    el:"#app",
+    telQuery:{},
+    render: function (createElement) {
+        this.$set(this.telQuery, 'tel', this.$route.query.tel);
+        console.log(this.telQuery);
+        return createElement('div',"123");
+    }
+});
 export default {
     name: 'addr',
     data() {
@@ -38,7 +45,6 @@ export default {
                     let city=getRandom(region[0].regionEntitys);
                     //let code=region[0].code.substr(0,3);
                     let code=city.code.substr(0,city.code.length-1);
-                    console.log(Math.random(0,100));
                     addrLevel4Data().then(res4 => {
                         let level4 = res4.split('\n');
                         level4 = level4.map(row => row.split(','));
@@ -51,13 +57,28 @@ export default {
                         this.addr = `${region[0].region}${city.region}${addr[1]}${streeNo}号${getAreaName()}${buildNo}栋${room}室`;
                         console.log(this.addr);
                         //letrender(this.addr);
+                        //render.call();
                     });
                 });
             });
-        }
+        },
+
     },
-    render:(h,params) => {
-        return  h('script',"");
+    render: function (createElement) { 
+        return createElement('h1', "sss"); 
     }
+    // render(h) {
+    //     console.log('执行render函数');
+        
+    //     return  h('h1',"ggg");
+    // }
 };
+// Vue.component('child', {
+//     render: function (createElement) {
+//         return createElement('strong', this.$scopedSlots.default({
+//             text: 'This is Child Component'
+//         }))
+//     }
+// })
+
 </script>

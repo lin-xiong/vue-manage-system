@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 任务
+                    <i class="el-icon-lx-cascades"></i> 领券任务
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -24,18 +24,8 @@
             >
                 <el-table-column prop="id" label="ID" width="55" align="center" height="50"></el-table-column>
                 <el-table-column prop="shopId" :formatter="formatShopName" label="店铺名" align="center"></el-table-column>
-                <el-table-column prop="sku" label="sku" align="center"></el-table-column>
-                <el-table-column prop="keyword" label="关键词" align="center"></el-table-column>
-                <el-table-column prop="prices" label="价格" align="center"></el-table-column>
-                <el-table-column prop="count" label="单量" width="50" align="center"></el-table-column>
-                <el-table-column prop="exeDate" :formatter="formatDate" label="执行日期" width="110" align="center"></el-table-column>
-                <el-table-column prop="area" label="地区" width="100" align="center"></el-table-column>
-                <el-table-column prop="taskType" label="类型" width="50" align="center">
-                    <template slot-scope="scope"> 
-                        <span v-if="scope.row.taskType==1">种菜</span>
-                        <span v-if="scope.row.taskType==2">加购</span>
-                    </template>
-                </el-table-column>
+                <el-table-column prop="url" label="优惠券链接" align="center"></el-table-column>
+                <el-table-column prop="exeDate" label="执行时间" align="center" width="110" :formatter="formatDate"></el-table-column>
 
                 <el-table-column label="操作" width="120" align="center" prop="status">
                     <template slot-scope="scope">
@@ -90,44 +80,24 @@
 
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="editTaskform" :model="editTaskform" label-width="70px">
-                <el-input v-model="editTaskform.id" type="hidden"></el-input>
-                <el-form-item label="执行类型">
-                    <el-select v-model="editTaskform.taskType" placeholder="请选择">
-                        <el-option key="1" label="种菜" value="1"></el-option>
-                        <el-option key="2" label="加购" value="2"></el-option>
-                    </el-select>
+            <el-form ref="editCouponsform" :model="editCouponsform" label-width="70px">
+                <el-input v-model="editCouponsform.id" type="hidden"></el-input>
+                <el-form-item label="url">
+                    <el-input v-model="editCouponsform.url"></el-input>
                 </el-form-item>
-                <el-form-item label="sku">
-                    <el-input v-model="editTaskform.sku"></el-input>
+                <el-form-item label="状态">
+                    <el-input v-model="editCouponsform.status"></el-input>
                 </el-form-item>
-                <el-form-item label="关键词">
-                    <el-input v-model="editTaskform.keyword"></el-input>
-                </el-form-item>
-                <el-form-item label="价格">
-                    <el-input v-model="editTaskform.prices"></el-input>
-                </el-form-item>
-                <el-form-item label="执行日期">
+                 <el-form-item label="执行日期">
                         <el-col :span="11">
                             <el-date-picker
                                 type="date"
                                 placeholder="执行日期"
-                                v-model="editTaskform.exeDate"
+                                v-model="editCouponsform.exeDate"
                                 value-format="yyyy-MM-dd"
                                 style="width: 100%;"
                             ></el-date-picker>
                         </el-col>
-                    </el-form-item>
-                <el-form-item label="单量">
-                    <el-input v-model="editTaskform.count"></el-input>
-                </el-form-item>
-                <el-form-item label="区域">
-                    <el-select v-model="editTaskform.area"  placeholder="请选择">
-                        <el-option v-for="item in multiRegion" :key="item.value" :label="item.label" :value="item.value" ></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="状态">
-                    <el-input v-model="editTaskform.status"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -136,47 +106,27 @@
             </span>
         </el-dialog>
 
-        <!-- 增加Task弹出框 -->
-        <el-dialog title="增加Task" :visible.sync="addVisible" width="30%">
-            <el-form ref="addTaskform" :model="addTaskform" label-width="70px">
-                <el-form-item label="执行类型">
-                    <el-select v-model="addTaskform.taskType" placeholder="请选择">
-                        <el-option key="1" label="种菜" value="1"></el-option>
-                        <el-option key="2" label="加购" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
+        <!-- 增加Coupon弹出框 -->
+        <el-dialog title="增加Coupon" :visible.sync="addVisible" width="30%">
+            <el-form ref="addCouponsform" :model="addCouponsform" label-width="70px">
                 <el-form-item label="选择店铺">
-                    <el-select v-model="addTaskform.shopId"  placeholder="请选择">
+                    <el-select v-model="addCouponsform.shopId"  placeholder="请选择">
                         <el-option v-for="item in multiShop" :key="item.id" :label="item.shopName" :value="item.id" ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="sku">
-                    <el-input v-model="addTaskform.sku"></el-input>
+                <el-form-item label="url">
+                    <el-input v-model="addCouponsform.url"></el-input>
                 </el-form-item>
-                <el-form-item label="关键词">
-                    <el-input v-model="addTaskform.keyword"></el-input>
-                </el-form-item>
-                <el-form-item label="价格">
-                    <el-input v-model="addTaskform.prices"></el-input>
-                </el-form-item>
-                <el-form-item label="执行日期">
+                 <el-form-item label="执行日期">
                         <el-col :span="11">
                             <el-date-picker
                                 type="date"
                                 placeholder="执行日期"
-                                v-model="addTaskform.exeDate"
+                                v-model="addCouponsform.exeDate"
                                 value-format="yyyy-MM-dd"
                                 style="width: 100%;"
                             ></el-date-picker>
                         </el-col>
-                </el-form-item>
-                <el-form-item label="单量">
-                    <el-input v-model="addTaskform.count"></el-input>
-                </el-form-item>
-                <el-form-item label="区域">
-                    <el-select v-model="addTaskform.area"  placeholder="请选择">
-                        <el-option v-for="item in multiRegion" :key="item.value" :label="item.label" :value="item.value" ></el-option>
-                    </el-select>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -188,16 +138,16 @@
 </template>
 
 <script>
-import { taskListData } from '../../api/index';
-import { taskEditData } from '../../api/index';
-import { taskSearchData } from '../../api/index';
-import { taskAddData } from '../../api/index';
+import { CouponsListData } from '../../api/index';
+import { CouponsEditData } from '../../api/index';
+import { CouponsSearchData } from '../../api/index';
+import { CouponsAddData } from '../../api/index';
 import { shopListData } from '../../api/index';
 
-import { taskExeData } from '../../api/index';
+import { CouponsExeData } from '../../api/index';
 import { regionListData } from '../../api/index';
 export default {
-    name: 'taskList',
+    name: 'CouponsList',
     data() {
         return {
             query: {
@@ -210,8 +160,8 @@ export default {
             editVisible: false,
             addVisible: false,
             pageTotal: 0,
-            editTaskform:{},
-            addTaskform:{},
+            editCouponsform:{},
+            addCouponsform:{},
             multiShop: [],
             multiRegion: [],
             form: {},
@@ -225,15 +175,15 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            regionListData().then(res => {
-                this.multiRegion = res.region;
-                console.log(this.multiRegion);
-            });
+            // regionListData().then(res => {
+            //     this.multiRegion = res.region;
+            //     console.log(this.multiRegion);
+            // });
             shopListData().then(res => {
                 console.log(res);
                 this.multiShop = res.data ;
             });
-            taskListData(this.query).then(res => {
+            CouponsListData(this.query).then(res => {
                 console.log(res);
                 this.tableData = res.data;
                 this.pageTotal = res.pageTotal ;
@@ -243,7 +193,7 @@ export default {
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            taskSearchData(this.query).then(res => {
+            CouponsSearchData(this.query).then(res => {
                 console.log(res);
                 this.tableData = res.data;
                 this.pageTotal = res.pageTotal ;
@@ -256,7 +206,7 @@ export default {
                 type: 'warning'
             }).then(res => {
                 this.idx = index; 
-                taskExeData(row).then(res => {
+                CouponsExeData(row).then(res => {
                     console.log(res);
                     if(res>=1){
                         this.$message.success('执行成功');
@@ -273,7 +223,7 @@ export default {
             }).then(res => {
                 this.idx = index;
                 row.status=-1;
-                taskEditData(row).then(res => {
+                CouponsEditData(row).then(res => {
                     console.log(res);
                     if(res>=1){
                         this.$message.success('停止执行成功');
@@ -289,7 +239,7 @@ export default {
             }).then(res => {
                 this.idx = index; 
                 row.status=2;
-                taskEditData(row).then(res => {
+                CouponsEditData(row).then(res => {
                     console.log(res);
                     if(res>=1){
                         this.$message.success('继续执行成功');
@@ -314,24 +264,24 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = index;
-            this.editTaskform = row;
+            this.editCouponsform = row;
             this.editVisible = true;
         },
          // 拷贝操作
         handleCopy(index, row) {
             this.idx = index;
-            this.addTaskform = row;
+            this.addCouponsform = row;
             this.addVisible = true;
         },
         // 保存编辑
         saveEdit() {
-            taskEditData(this.editTaskform).then(res => {
+            CouponsEditData(this.editCouponsform).then(res => {
                 console.log(res);
                 if(res==1)
                  {  
                     this.editVisible = false;
                     this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-                    this.$set(this.tableData, this.idx, this.editTaskform);
+                    this.$set(this.tableData, this.idx, this.editCouponsform);
                  }
                 else {
                     this.$message.error('修改出错！');
@@ -346,16 +296,16 @@ export default {
         },
         // 保存添加
         saveAdd() {
-            taskAddData(this.addTaskform).then(res => {
+            CouponsAddData(this.addCouponsform).then(res => {
                 console.log(res);
                 if(res==1)
                  {  
                     this.addVisible = false;
-                    this.$message.success(`增加Task成功`);
+                    this.$message.success(`增加addCouponsform成功`);
                     this.getData();
                  }
                 else {
-                    this.$message.error('增加Task出错！');
+                    this.$message.error('增加addCouponsform出错！');
                     console.log('error add shop!!');
                     return false;
                 }

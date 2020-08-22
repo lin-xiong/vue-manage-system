@@ -49,7 +49,7 @@
                 <el-table-column prop="shopName"  label="店铺名称" align="center"></el-table-column>
                 <el-table-column prop="keyword" label="关键词" align="center"></el-table-column>
                 <el-table-column prop="sku"  label="SKU" align="center"></el-table-column>
-                <el-table-column prop="tel"  label="手机号" width="110" align="center"></el-table-column>
+                <el-table-column prop="tel"  label="手机号" width="115" align="center"></el-table-column>
                 <el-table-column prop="orderid"  label="订单号" width="120" align="center"></el-table-column>
                 <el-table-column prop="price"  label="价格" align="center"></el-table-column>
                 <el-table-column prop="telNo" label="操作手机" width="80" align="center"></el-table-column> 
@@ -71,21 +71,17 @@
                 v-show="false"
                 id="caseListTableExport"
             >
-                <el-table-column prop="exeDate" label="日期" width="80" align="center"></el-table-column>
+                <el-table-column prop="exeTime" label="日期" width="80" align="center" :formatter="formatDate"></el-table-column>
                 <el-table-column prop="shopName"  label="店铺名称" align="center"></el-table-column>
-                <el-table-column prop="count1"  label="数量" align="center"></el-table-column>
                 <el-table-column prop="keyword" label="关键词" align="center"></el-table-column>
                 <el-table-column prop="sku"  label="SKU" align="center"></el-table-column>
                 <el-table-column prop="tel"  label="手机号" width="110" align="center"></el-table-column>
-                <el-table-column prop="orderid"  label="订单号1" width="120" align="center"></el-table-column>
-                <el-table-column prop="orderid"  label="订单号2" width="120" align="center"></el-table-column>
-                <el-table-column prop="price"  label="价格" align="center"></el-table-column>
-                <el-table-column prop="shortName" label="商品备注" width="80" align="center"></el-table-column> 
-                <el-table-column prop="telNo" label="手机编号" width="80" align="center"></el-table-column> 
-                <el-table-column prop="status1" label="操作员" width="120" align="center"  ></el-table-column>
-                <el-table-column prop="status1" label="快递员" width="120" align="center"  ></el-table-column>
+                <el-table-column prop="orderid"  label="订单号" width="120" align="center"></el-table-column>
                 <el-table-column prop="addr" label="收货地址" align="center" ></el-table-column>
-               
+                <el-table-column prop="price"  label="价格" align="center"></el-table-column>
+                <el-table-column prop=""  label="佣金" align="center"></el-table-column>
+                <el-table-column prop="shortName" label="商品备注" width="80" align="center"></el-table-column> 
+
             </el-table>
 
         </div>
@@ -259,6 +255,15 @@ export default {
                 return null
             }
             let dt = new Date(data)
+            return dt.getFullYear() + '-' + (dt.getMonth() +1) + '-' + dt.getDate();
+        },
+        formatDateTime(row, column) {
+            // 获取单元格数据
+            let data = row[column.property]
+            if(data == null) {
+                return null
+            }
+            let dt = new Date(data)
             return dt.getFullYear() + '-' + (dt.getMonth() +1) + '-' + dt.getDate()+" "+dt.getHours()+":"+dt.getMinutes()+":"+dt.getSeconds();
         },
         formatShopName(row, column) {
@@ -302,12 +307,13 @@ export default {
                 if(data==401) return "已提交地址";
                 if(data==800) return "进入付款";
                 if(data==811) return "支付异常";
+                if(data==500) return "已生成订单";
                 if(data==1000) return "完成";
         },
         //定义导出Excel表格事件
         exportExcel() {
         /* 从表生成工作簿对象 */
-        var wb = XLSX.utils.table_to_book(document.querySelector("#caseListTableExport"));
+        var wb = XLSX.utils.table_to_book(document.querySelector("#caseListTableExport"),{raw:true});
         /* 获取二进制字符串作为输出 */
         var wbout = XLSX.write(wb, {
             bookType: "xlsx",

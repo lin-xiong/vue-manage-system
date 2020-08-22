@@ -30,6 +30,11 @@ export default new Router({
                     meta: { title: '任务列表' , permission: true }
                 },
                 {
+                    path: '/couponList',
+                    component: () => import(/* webpackChunkName: "table" */ '../components/page/CouponList.vue'),
+                    meta: { title: '领券列表' , permission: true }
+                },
+                {
                     path: '/addrList',
                     component: () => import(/* webpackChunkName: "table" */ '../components/page/AddrList.vue'),
                     meta: { title: '地址列表' , permission: true }
@@ -48,6 +53,11 @@ export default new Router({
                     path: '/caseList',
                     component: () => import(/* webpackChunkName: "icon" */ '../components/page/CaseList.vue'),
                     meta: { title: '订单导出' , permission: true }
+                },
+                {
+                    path: '/goodsList',
+                    component: () => import(/* webpackChunkName: "icon" */ '../components/page/GoodsList.vue'),
+                    meta: { title: '物品导出' , permission: true }
                 },
                 {
                     // 权限页面
@@ -75,6 +85,10 @@ export default new Router({
         {
             path: '/ReturnAddrByTel',
             component: () => import(/* webpackChunkName: "login" */ '../components/page/ReturnAddrByTel.vue'),
+            meta: { title: '登录' }
+        },
+        {
+            path: '/cc',
             meta: { title: '登录' }
         },
         {

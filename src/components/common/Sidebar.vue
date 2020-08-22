@@ -67,6 +67,11 @@ export default {
                     title: '任务列表'
                 },
                 {
+                    icon: 'el-icon-lx-emoji',
+                    index: 'couponList',
+                    title: '领券列表'
+                },
+                {
                     icon: 'el-icon-lx-rank',
                     index: 'addrList',
                     title: '地址列表'
@@ -80,6 +85,11 @@ export default {
                     icon: 'el-icon-lx-global',
                     index: 'caseList',
                     title: '订单导出表'
+                },
+                {
+                    icon: 'el-icon-lx-global',
+                    index: 'goodsList',
+                    title: '货物导出表'
                 }
             ]
         };

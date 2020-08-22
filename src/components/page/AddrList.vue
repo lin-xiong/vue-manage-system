@@ -76,7 +76,7 @@
                     <el-input v-model="editAddrform.city"></el-input>
                 </el-form-item>
                 <el-form-item label="地址">
-                    <el-input v-model="editAddrform.addr"></el-input>
+                    <el-input v-model="editAddrform.addr" type="textarea" rows="5"></el-input>
                 </el-form-item>
                 <el-form-item label="快递员">
                     <el-input v-model="editAddrform.courier"></el-input>
@@ -108,7 +108,7 @@
                     <el-input v-model="addAddrform.city"></el-input>
                 </el-form-item>
                 <el-form-item label="地址">
-                    <el-input v-model="addAddrform.addr"></el-input>
+                    <el-input v-model="addAddrform.addr" type="textarea" rows="5"></el-input>
                 </el-form-item>
                 <el-form-item label="快递员">
                     <el-input v-model="addAddrform.courier"></el-input>

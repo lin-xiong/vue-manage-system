@@ -74,8 +74,6 @@ export const  getAreaName = function() {
     const suffix = ["酒店", "华庭", "苑", "湾", "府", "国际公寓", "海岸", "园", "堡"];
   
     let firstName = "";
-    //随机选择获取名称的方式（随机组合还是取常见名）PS：这里用到 underscore 的方法
-    //underscore 网址： http://www.bootcss.com/p/underscore/
     if (randomMM(0, 10) > 5){
       firstName = keyArr[randomMM(0, keyArr.length - 1)] + keyArr[randomMM(0, keyArr.length - 1)];
     } else{

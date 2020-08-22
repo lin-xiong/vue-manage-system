@@ -189,3 +189,45 @@ export const exportOrderData = query => {
         params: query
     });
 };
+
+
+//coupons
+export const CouponsListData = query => {
+    return request({
+        url: '/api/Coupons/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/all",
+        method: 'get',
+        params: query
+    });
+};
+
+export const CouponsSearchData = query => {
+    return request({
+        url: '/api/Coupons/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/search",
+        method: 'get',
+        params: query
+    });
+};
+
+export const CouponsEditData = query => {
+    return request({
+        url: '/api/Coupons/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps'),
+        method: 'put',
+        params: query
+    });
+};
+
+export const CouponsAddData = query => {
+    return request({
+        url: '/api/Coupons/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps'),
+        method: 'post',
+        params: query
+    });
+};
+
+export const CouponsExeData = query => {
+    return request({
+        url: '/api/Coupons/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/Exe",
+        method: 'post',
+        params: query
+    });
+};
