@@ -139,6 +139,14 @@ export const addrAddData = query => {
     });
 };
 
+export const addrTestData = query => {
+    return request({
+        url: '/api/Addr/Test/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps'),
+        method: 'get',
+        params: query
+    });
+};
+
 //order
 export const orderListData = query => {
     return request({
@@ -227,6 +235,31 @@ export const CouponsAddData = query => {
 export const CouponsExeData = query => {
     return request({
         url: '/api/Coupons/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/Exe",
+        method: 'post',
+        params: query
+    });
+};
+
+//货物接口
+export const goodsSearchData = query => {
+    return request({
+        url: '/api/Goods/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/search",
+        method: 'get',
+        params: query
+    });
+};
+
+export const goodsEditData = query => {
+    return request({
+        url: '/api/Goods/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps'),
+        method: 'put',
+        params: query
+    });
+};
+
+export const goodsAddData = query => {
+    return request({
+        url: '/api/Goods/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps'),
         method: 'post',
         params: query
     });

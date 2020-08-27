@@ -12,6 +12,7 @@
                 :height="700"
                 :stripe="true"
             >
+                <el-table-column prop="id1" label="序号" type="index" width="60" align="center"></el-table-column>
                 <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
                 <el-table-column prop="shopName"  label="店铺名称" align="center"></el-table-column>
                 <el-table-column prop="sku"  label="SKU" align="center"></el-table-column>
@@ -19,7 +20,7 @@
                 <el-table-column prop="telNo" label="操作手机" width="80" align="center"></el-table-column>
                 <el-table-column prop="tel" label="手机号" width="120" align="center"></el-table-column>
                 <el-table-column prop="orderid" label="订单号" width="120" align="center"></el-table-column>
-                <el-table-column prop="price" label="价格" width="60" align="center"></el-table-column>
+                <el-table-column prop="price" label="价格" width="80" align="center"></el-table-column>
                 <el-table-column prop="status" label="状态" width="120" align="center" :formatter="formatStatus" ></el-table-column>
                 <el-table-column prop="addr" label="收货地址" width="80" align="center" :formatter="formatAddr"></el-table-column>
                 <el-table-column prop="exeTime" label="执行时间" align="center" :formatter="formatDate"></el-table-column>

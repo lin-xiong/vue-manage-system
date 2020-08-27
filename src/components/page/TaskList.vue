@@ -9,7 +9,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-input v-model="query.shopName" placeholder="商铺名称" class="handle-input mr10"></el-input>
+                <el-input v-model="query.shopName" placeholder="商铺名称/sku" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" @click="handleAdd">添加</el-button>
             </div>
@@ -121,10 +121,8 @@
                 <el-form-item label="单量">
                     <el-input v-model="editTaskform.count"></el-input>
                 </el-form-item>
-                <el-form-item label="区域">
-                    <el-select v-model="editTaskform.area"  placeholder="请选择">
-                        <el-option v-for="item in multiRegion" :key="item.value" :label="item.label" :value="item.value" ></el-option>
-                    </el-select>
+                 <el-form-item label="区域">
+                    <el-input v-model="editTaskform.area"></el-input>
                 </el-form-item>
                 <el-form-item label="状态">
                     <el-input v-model="editTaskform.status"></el-input>
@@ -174,9 +172,7 @@
                     <el-input v-model="addTaskform.count"></el-input>
                 </el-form-item>
                 <el-form-item label="区域">
-                    <el-select v-model="addTaskform.area"  placeholder="请选择">
-                        <el-option v-for="item in multiRegion" :key="item.value" :label="item.label" :value="item.value" ></el-option>
-                    </el-select>
+                    <el-input v-model="addTaskform.area"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">

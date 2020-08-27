@@ -5,33 +5,12 @@
                 <el-select v-model="query.shopName"  placeholder="选择店铺">
                     <el-option v-for="item in multiShop" :key="item.id" :label="item.shopName" :value="item.shopName" ></el-option>
                 </el-select>
-                <el-date-picker
-                    type="date"
-                    placeholder="开始日期"
-                    v-model="query.begin"
-                    value-format="yyyy-MM-dd"
-                    width="10"
-                ></el-date-picker><span>-</span>
-                <el-date-picker
-                    type="date"
-                    placeholder="结束日期"
-                    v-model="query.end"
-                    value-format="yyyy-MM-dd"
-                ></el-date-picker>
-                <!-- <el-date-picker
-                    v-model="pickerDate"
-                    type="daterange"
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    :picker-options="pickerBeginDateBefore"
-                    :default-value="timeDefaultShow"
-                    end-placeholder="结束日期"
-                    size="small"
-                    class="margin-right-10">
-                </el-date-picker>  -->
+                <el-input v-model="query.courier" placeholder="快递员" class="handle-input mr10"></el-input>
+                <el-input v-model="query.sku" placeholder="快递员" class="handle-input mr10"></el-input>
                 <el-button style="margin-left:10px" type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" @click="exportExcel">导出</el-button>
                 <span style="padding:8px 0px 0px 5px;">总计:{{totalCount}}</span>
+                <el-button type="primary" icon="el-icon-cold-drink" @click="returnGoods">回收货物</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -86,12 +65,89 @@
 
         </div>
 
+      <!-- 回收货物操作弹出框 -->
+        <el-dialog title="回收货物操作" :visible.sync="retrunVisible" width="80%">
+            <div class="container" style="padding:0px;">
+            <div class="handle-box" style="padding:8px 0px 0px 5px;">
+                <el-select v-model="retrunQuery.shopName"  placeholder="选择店铺">
+                    <el-option v-for="item in multiShop" :key="item.id" :label="item.shopName" :value="item.shopName" ></el-option>
+                </el-select>
+                <el-input v-model="retrunQuery.courier" placeholder="快递员" class="handle-input mr10"></el-input>
+                <el-input v-model="retrunQuery.sku" placeholder="SKU" class="handle-input mr10"></el-input>
+                <el-button style="margin-left:10px" type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                <el-button type="primary" icon="el-icon-add" @click="exportExcel">导出</el-button>
+                <span style="padding:8px 0px 0px 5px;">总计:{{totalCount}}</span>
+            </div>
+            <el-table
+                :data="tableData"
+                :default-sort = "{prop: 'exeTime', order: 'descending'}"
+                border
+                class="table"
+                ref="multipleTable"
+                header-cell-class-name="table-header"
+                @selection-change="handleSelectionChange"
+                :height="700"
+                :stripe="true"
+                id="goodsListTable"
+            >
+                <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
+                <el-table-column prop="shopName"  label="店铺名称" align="center"></el-table-column>
+                <el-table-column prop="keyword" label="关键词" align="center"></el-table-column>
+                <el-table-column prop="sku"  label="SKU" align="center"></el-table-column>
+                <el-table-column prop="tel"  label="手机号" width="115" align="center"></el-table-column>
+                <el-table-column prop="orderid"  label="订单号" width="120" align="center"></el-table-column>
+                <el-table-column prop="price"  label="价格" align="center"></el-table-column>
+                <el-table-column prop="telNo" label="操作手机" width="80" align="center"></el-table-column> 
+                <el-table-column prop="status" label="状态" width="120" align="center" :formatter="formatStatus" ></el-table-column>
+                <el-table-column prop="addr" label="收货地址" align="center" :formatter="formatAddr"></el-table-column>
+               
+            </el-table>
+            </div>
+            <el-form ref="editAddrform" :model="editAddrform" label-width="70px">
+                <el-input v-model="editAddrform.id" type="hidden"></el-input>
+                <el-form-item label="区域">
+                    <el-select v-model="editAddrform.region"  placeholder="请选择">
+                        <el-option v-for="item in multiRegion" :key="item.value" :label="item.label" :value="item.value" ></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="城市">
+                    <el-input v-model="editAddrform.city"></el-input>
+                </el-form-item>
+                <el-form-item label="地址">
+                    <el-input v-model="editAddrform.addr" type="textarea" rows="5"></el-input>
+                </el-form-item>
+                <el-form-item label="快递员">
+                    <el-input v-model="editAddrform.courier"></el-input>
+                </el-form-item>
+                <el-form-item label="区域编号">
+                    <el-input v-model="editAddrform.addrid"></el-input>
+                </el-form-item>
+                <el-form-item label="状态">
+                    <el-input v-model="editAddrform.status"></el-input>
+                </el-form-item>
+                <el-form-item label="专供店铺">
+                    <el-select v-model="editAddrform.shopID"  placeholder="请选择">
+                        <el-option v-for="item in multiShop" :key="item.id" :label="item.shopName" :value="item.id" ></el-option>
+                    </el-select>
+                </el-form-item>
+                <!-- <el-radio v-for="(user, index) in users" :key="index" :label="user" :value="user">{{ `${user.name}(${user.age}岁)` }}
+                </el-radio > -->
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="editVisible = false">取 消</el-button>
+                <el-button type="primary" @click="saveEdit">确 定</el-button>
+            </span>
+        </el-dialog>
+
     </div>
 </template>
 
 <script>
-import { exportOrderData } from '../../api/index';
+import { goodsEditData } from '../../api/index';
+import { goodsSearchData } from '../../api/index';
+import { goodsAddData } from '../../api/index';
 import { shopListData } from '../../api/index';
+
 import FileSaver from 'file-saver';
 import XLSX from 'xlsx';
 export default {
@@ -101,10 +157,11 @@ export default {
             query: {
                 status:1000
             },
+            retrunQuery:{},
             tableData: [],
             multipleSelection: [],
             delList: [],
-            editVisible: false,
+            retrunVisible: false,
             addVisible: false,
             pageTotal: 0,
             editAddrform:{},
@@ -167,6 +224,12 @@ export default {
                 //this.pageTotal = res.pageTotal ;
                 this.totalCount=res.data.length;
             });
+        },
+        // 回收货物操作
+        returnGoods(index, row) {
+            // this.idx = index;
+            // this.editAddrform = row;
+            this.retrunVisible = true;
         },
         // 执行操作
         handleExe(index, row) {
@@ -276,20 +339,6 @@ export default {
                 return "";
         },
         formatStatus(row, column) {
-            // 获取单元格数据
-            // <template slot-scope="scope"> 
-            //             <span v-if="scope.row.status==2">任务被拉取</span>
-            //             <span v-if="scope.row.status>=200 && scope.row.status<300">开始执行</span>
-            //             <span v-if="scope.row.status>=300">执行 "scope.row.status-300"</span>
-            //             <span v-if="scope.row.status==4">开始执行</span>
-            //             <span v-if="scope.row.status==5">取优惠券成功</span>
-            //             <span v-if="scope.row.status==6">取优惠券失败</span>
-            //             <span v-if="scope.row.status==7">设置收件人失败</span>
-            //             <span v-if="scope.row.status==8">下单成功</span>
-            //             <span v-if="scope.row.status==9">下单失败</span>
-            //             <span v-if="scope.row.status==10">代付连接完成</span>
-            //             <span v-if="scope.row.status==11">完成操作</span>
-            //         </template>
                 let data = row[column.property];
                 if(data == 2) return "任务被拉取";
                 if(data==200) return "开始执行";

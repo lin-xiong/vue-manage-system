@@ -9,7 +9,7 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-input v-model="query.courier" placeholder="快递员" class="handle-input mr10"></el-input>
+                <el-input v-model="query.courier" placeholder="快递员、编码、地址" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" @click="handleAdd">添加</el-button>
                 <el-button
@@ -29,12 +29,14 @@
                 :stripe="true"
             >
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
+                
                 <el-table-column prop="id" label="ID" width="60" align="center"></el-table-column>
                 <el-table-column prop="region" width="70" label="区域" align="center"></el-table-column>
                 <el-table-column prop="city" width="100" label="城市" align="center"></el-table-column>
                 <el-table-column prop="addr" label="地址" align="center"></el-table-column>
                 <el-table-column prop="courier" label="快递员" width="100" align="center"></el-table-column>
                 <el-table-column prop="addrid" label="区域编号" width="80" align="center"></el-table-column>
+                <el-table-column prop="shopID" label="专属店铺" width="80" align="center" :formatter="formatShopName"></el-table-column>
                 <el-table-column prop="status" label="状态" width="70" align="center">
                     <template slot-scope="scope"> 
                         <span v-if="scope.row.status==1">使用中</span>
@@ -48,6 +50,12 @@
                             icon="el-icon-edit"
                             @click="handleEdit(scope.$index, scope.row)"
                         >编辑</el-button>
+                        <br />
+                        <el-button
+                            type="text"
+                            icon="el-icon-folder-checked"
+                            @click="handleTest(scope.$index, scope.row)"
+                        >测试</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -87,6 +95,11 @@
                 <el-form-item label="状态">
                     <el-input v-model="editAddrform.status"></el-input>
                 </el-form-item>
+                <el-form-item label="专供店铺">
+                    <el-select v-model="editAddrform.shopID"  placeholder="请选择">
+                        <el-option v-for="item in multiShop" :key="item.id" :label="item.shopName" :value="item.id" ></el-option>
+                    </el-select>
+                </el-form-item>
                 <!-- <el-radio v-for="(user, index) in users" :key="index" :label="user" :value="user">{{ `${user.name}(${user.age}岁)` }}
                 </el-radio > -->
             </el-form>
@@ -116,6 +129,11 @@
                 <el-form-item label="区域编号">
                     <el-input v-model="addAddrform.addrid"></el-input>
                 </el-form-item>
+                <el-form-item label="专供店铺">
+                    <el-select v-model="addAddrform.shopID"  placeholder="请选择">
+                        <el-option v-for="item in multiShop" :key="item.id" :label="item.shopName" :value="item.id" ></el-option>
+                    </el-select>
+                </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="addVisible = false">取 消</el-button>
@@ -130,7 +148,10 @@ import { addrListData } from '../../api/index';
 import { addrEditData } from '../../api/index';
 import { addrSearchData } from '../../api/index';
 import { addrAddData } from '../../api/index';
+import { addrTestData } from '../../api/index';
 import { regionListData } from '../../api/index';
+
+import { shopListData } from '../../api/index';
 
 export default {
     name: 'addrList',
@@ -149,6 +170,7 @@ export default {
             editAddrform:{},
             addAddrform:{},
             multiRegion: [],
+            multiShop:[],
             form: {},
             idx: -1,
             id: -1
@@ -163,6 +185,12 @@ export default {
             regionListData().then(res => {
                 this.multiRegion = res.region;
                 console.log(this.multiRegion);
+            });
+            shopListData().then(res => {
+                console.log(res);
+                this.multiShop = res.data ;
+                var allshop= {id:0,shopName:'全部'};
+                this.multiShop.splice(0,0,allshop);
             });
             addrListData(this.query).then(res => {
                 console.log(res);
@@ -194,6 +222,16 @@ export default {
                     }
                 });
             }).catch(() => {});
+        },
+        // 测试操作
+        handleTest(index, row) {
+          addrTestData(row).then(res => {
+                console.log(res);
+                   this.$confirm('生成地址：'+res.data.addr, '提示', {
+                        type: 'warning'
+                    }).catch(() => {});
+            });
+            
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -274,6 +312,16 @@ export default {
                 }
                 let dt = new Date(data)
                  return dt.getFullYear() + '-' + (dt.getMonth() + 1) + '-' + dt.getDate();
+        },
+        formatShopName(row, column) {
+            // 获取单元格数据
+                let data = row[column.property];
+                if(this.multiShop == null)
+                    return null;
+                for (let i = 0; i < this.multiShop.length; i++) { 
+                    if(data==this.multiShop[i].id)
+                        return this.multiShop[i].shopName;
+                }
         }
     }
 };
