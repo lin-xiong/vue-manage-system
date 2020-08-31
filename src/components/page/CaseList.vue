@@ -75,9 +75,9 @@
                 <el-table-column prop="exeTime" label="日期" width="80" align="center" :formatter="formatDate"></el-table-column>
                 <el-table-column prop="shopName"  label="店铺名称" align="center"></el-table-column>
                 <el-table-column prop="keyword" label="关键词" align="center"></el-table-column>
-                <el-table-column prop="sku"  label="SKU" align="center"></el-table-column>
-                <el-table-column prop="tel"  label="手机号" width="110" align="center"></el-table-column>
-                <el-table-column prop="orderid"  label="订单号" width="120" align="center"></el-table-column>
+                <el-table-column prop="sku"  label="SKU" align="center" :formatter="formatNum"></el-table-column>
+                <el-table-column prop="tel"  label="手机号" width="110" align="center" :formatter="formatNum"></el-table-column>
+                <el-table-column prop="orderid"  label="订单号" width="120" align="center" :formatter="formatNum"></el-table-column>
                 <el-table-column prop="addr" label="收货地址" align="center" ></el-table-column>
                 <el-table-column prop="price"  label="价格" align="center"></el-table-column>
                 <el-table-column prop=""  label="佣金" align="center"></el-table-column>
@@ -267,6 +267,14 @@ export default {
             let dt = new Date(data)
             return dt.getFullYear() + '-' + (dt.getMonth() +1) + '-' + dt.getDate()+" "+dt.getHours()+":"+dt.getMinutes()+":"+dt.getSeconds();
         },
+        formatNum(row, column) {
+            // 获取单元格数据
+            let data = row[column.property]
+            if(data == null) {
+                return null
+            }
+            return "'"+data;
+        },
         formatShopName(row, column) {
             // 获取单元格数据
                 let data = row[column.property];
@@ -314,7 +322,7 @@ export default {
         //定义导出Excel表格事件
         exportExcel() {
         /* 从表生成工作簿对象 */
-        var wb = XLSX.utils.table_to_book(document.querySelector("#caseListTableExport"),{raw:true});
+        var wb = XLSX.utils.table_to_book(document.querySelector("#caseListTableExport"));//,{raw:true}
         /* 获取二进制字符串作为输出 */
         var wbout = XLSX.write(wb, {
             bookType: "xlsx",

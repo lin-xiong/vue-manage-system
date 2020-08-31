@@ -264,3 +264,11 @@ export const goodsAddData = query => {
         params: query
     });
 };
+
+export const getOrderListData = query => {
+    return request({
+        url: '/api/Order/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/getOrderListByIDs",
+        method: 'get',
+        params: query
+    });
+};
