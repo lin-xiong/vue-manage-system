@@ -16,6 +16,14 @@ export const regionListData = query => {
     });
 };
 
+export const taskTypeListData = query => {
+    return request({
+        url: './taskType.json',
+        method: 'get',
+        params: query
+    });
+};
+
 export const loginData = query => {
     return request({
         url: '/api/login',

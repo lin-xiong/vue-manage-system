@@ -22,6 +22,7 @@
                 <el-table-column prop="orderid" label="订单号" width="120" align="center"></el-table-column>
                 <el-table-column prop="price" label="价格" width="80" align="center"></el-table-column>
                 <el-table-column prop="status" label="状态" width="120" align="center" :formatter="formatStatus" ></el-table-column>
+                <el-table-column prop="taskType" label="任务类型" width="80" align="center" :formatter="formatTaskType" ></el-table-column>
                 <el-table-column prop="addr" label="收货地址" width="80" align="center" :formatter="formatAddr"></el-table-column>
                 <el-table-column prop="exeTime" label="执行时间" align="center" :formatter="formatDate"></el-table-column>
                
@@ -221,6 +222,18 @@ export default {
                 if(data==500) return "已生成订单";
                 if(data==811) return "支付异常";
                 if(data==1000) return "完成";
+                if(data>1000) return "被调用";
+        },
+        formatTaskType(row, column) {
+            // 获取单元格数据
+                let data = row[column.property];
+                if(data == 1) return "一路购";
+                if(data==2) return "已加再购";
+                if(data==3) return "评价";
+                if(data==10) return "只加购";
+                if(data==11) return "只下单";
+                if(data==12) return "只下单(公司付)";
+                if(data==15) return "只领券";
         }
     },
     deactivated()

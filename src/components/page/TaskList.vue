@@ -30,11 +30,16 @@
                 <el-table-column prop="count" label="单量" width="50" align="center"></el-table-column>
                 <el-table-column prop="exeDate" :formatter="formatDate" label="执行日期" width="110" align="center"></el-table-column>
                 <el-table-column prop="area" label="地区" width="100" align="center"></el-table-column>
-                <el-table-column prop="taskType" label="类型" width="50" align="center">
-                    <template slot-scope="scope"> 
-                        <span v-if="scope.row.taskType==1">种菜</span>
-                        <span v-if="scope.row.taskType==2">加购</span>
-                    </template>
+                <el-table-column prop="taskType" label="类型" width="120" align="center" :formatter="formatTaskType" >
+                    <!-- <template slot-scope="scope"> 
+                        <span v-if="scope.row.taskType==1">直购(原来的)</span>
+                        <span v-if="scope.row.taskType==10">只加(跑加购)</span>
+                        <span v-if="scope.row.taskType==11">只下单</span>
+                        <span v-if="scope.row.taskType==12">只下单(公司付款)</span>
+                        <span v-if="scope.row.taskType==15">只领券</span>
+                        <span v-if="scope.row.taskType==2">加购(购物车加购)</span>
+                        <span v-if="scope.row.taskType==3">评价</span>
+                    </template> -->
                 </el-table-column>
 
                 <el-table-column label="操作" width="120" align="center" prop="status">
@@ -94,8 +99,7 @@
                 <el-input v-model="editTaskform.id" type="hidden"></el-input>
                 <el-form-item label="执行类型">
                     <el-select v-model="editTaskform.taskType" placeholder="请选择">
-                        <el-option key="1" label="种菜" value="1"></el-option>
-                        <el-option key="2" label="加购" value="2"></el-option>
+                        <el-option v-for="item in taskTypes" :key="item.key" :label="item.label" :value="item.value" ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="sku">
@@ -139,8 +143,7 @@
             <el-form ref="addTaskform" :model="addTaskform" label-width="70px">
                 <el-form-item label="执行类型">
                     <el-select v-model="addTaskform.taskType" placeholder="请选择">
-                        <el-option key="1" label="种菜" value="1"></el-option>
-                        <el-option key="2" label="加购" value="2"></el-option>
+                        <el-option v-for="item in taskTypes" :key="item.key" :label="item.label" :value="item.value" ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="选择店铺">
@@ -189,6 +192,7 @@ import { taskEditData } from '../../api/index';
 import { taskSearchData } from '../../api/index';
 import { taskAddData } from '../../api/index';
 import { shopListData } from '../../api/index';
+import { taskTypeListData } from '../../api/index';
 
 import { taskExeData } from '../../api/index';
 import { regionListData } from '../../api/index';
@@ -209,6 +213,8 @@ export default {
             editTaskform:{},
             addTaskform:{},
             multiShop: [],
+            taskTypes: {},
+            taskType:{},
             multiRegion: [],
             form: {},
             idx: -1,
@@ -234,7 +240,11 @@ export default {
                 this.tableData = res.data;
                 this.pageTotal = res.pageTotal ;
             });
-            
+            taskTypeListData().then(res => {
+                console.log(res);
+                this.taskTypes = res.taskType;
+            });
+
         },
         // 触发搜索按钮
         handleSearch() {
@@ -381,6 +391,17 @@ export default {
                     if(data==this.multiShop[i].id)
                         return this.multiShop[i].shopName;
                 }
+        },
+        formatTaskType(row, column) {
+            // 获取单元格数据
+                let data = row[column.property];
+                if(data == 1) return "一路购";
+                if(data==2) return "已加再购";
+                if(data==3) return "评价";
+                if(data==10) return "只加购";
+                if(data==11) return "只下单";
+                if(data==12) return "只下单(公司付)";
+                if(data==15) return "只领券";
         }
     }
 };

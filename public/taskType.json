@@ -1,0 +1,39 @@
+{
+    "taskType":[
+        {
+            "key":1,
+            "value": "1",
+            "label": "一路购(元初)"
+        },
+        {
+            "key":2,
+            "value": "2",
+            "label": "已加再购(已加过的)"
+        },
+        {
+            "key":3,
+            "value": "3",
+            "label": "评价"
+        },
+        {
+            "key":10,
+            "value": "10",
+            "label": "只加购"
+        },
+        {
+            "key":11,
+            "value": "11",
+            "label": "只下单"
+        },
+        {
+            "key":12,
+            "value": "12",
+            "label": "只下单(公司付)"
+        },
+        {
+            "key":15,
+            "value": "15",
+            "label": "只领券"
+        }],
+    "pageTotal": 7
+ }
