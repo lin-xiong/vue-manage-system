@@ -16,6 +16,16 @@
             "label": "评价"
         },
         {
+            "key":4,
+            "value": "4",
+            "label": "先下自营再购"
+        },
+        {
+            "key":5,
+            "value": "5",
+            "label": "先下同spu再购"
+        },
+        {
             "key":10,
             "value": "10",
             "label": "只加购"
