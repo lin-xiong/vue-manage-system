@@ -405,9 +405,13 @@ export default {
                 if(data == 1) return "一路购";
                 if(data==2) return "已加再购";
                 if(data==3) return "评价";
+                if(data==4) return "下自营单";
+                if(data==5) return "下超市单";
+                if(data==6) return "下自己单";
                 if(data==10) return "只加购";
                 if(data==11) return "只下单";
                 if(data==12) return "只下单(公司付)";
+                if(data==13) return "只下单(货到付款)";
                 if(data==15) return "只领券";
         }
     }
