@@ -2,7 +2,9 @@
     <div>
         <div class="container" style="padding:0px;">
             <div style="padding:8px 0px 0px 5px; ">
-                <el-input v-model="retrunQuery.sku" placeholder="sku" class="handle-input mr10" style="width:150px"></el-input>
+                <el-select v-model="retrunQuery.shopName"  placeholder="选择店铺">
+                    <el-option v-for="item in multiShop" :key="item.id" :label="item.shopName" :value="item.shopName" ></el-option>
+                </el-select>
                 <el-input v-model="retrunQuery.courier" placeholder="快递员" class="handle-input mr10" style="width:200px"></el-input>
                 <el-button style="margin-left:10px" type="primary" icon="el-icon-search" @click="handleHHSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" @click="setReturn">寄回</el-button>
@@ -17,7 +19,6 @@
                 <el-table-column prop="sku"  label="SKU" width="210" align="center"></el-table-column>
                 <el-table-column prop="courier"  label="快递员" width="115" align="center"></el-table-column>
                 <el-table-column prop="orderid"  label="订单号" width="120" align="center"></el-table-column>
-                <el-table-column prop="price"  label="价格" width="70" align="center"></el-table-column>
                 <el-table-column prop="exeTime"  label="执行时间" align="center" width="100" :formatter="formatDate"></el-table-column>
                 <el-table-column prop="addr" label="收货地址" align="center" :formatter="formatAddr"></el-table-column>
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
@@ -37,7 +38,7 @@
                     <el-input v-model="setReturnform.shopName" readonly="true"></el-input>
                 </el-form-item>
                  <el-form-item label="sku">
-                    <el-input v-model="setReturnform.sku" readonly="true"></el-input>
+                    <el-input v-model="setReturnform.sku" type="textarea" rows="5"></el-input>
                 </el-form-item>
                 <!-- <el-select v-model="setReturnform.sku"  placeholder="选择sku">
                     <el-option v-for="item in setReturnform.skus" :key="item.sku" :label="item.sku" :value="item.sku" ></el-option>
@@ -73,9 +74,7 @@
         <el-dialog title="物流列表" :visible.sync="returnVisible" width="80%">
             <div class="container" style="padding:0px;">
             <div class="handle-box" style="padding:8px 0px 0px 5px;">
-                <el-select v-model="query.shopID"  placeholder="选择店铺">
-                    <el-option v-for="item in multiShop" :key="item.id" :label="item.shopName" :value="item.id" ></el-option>
-                </el-select>
+                
                 <el-input v-model="query.courier" placeholder="快递员" class="handle-input mr10"></el-input>
                 <el-input v-model="query.sku" placeholder="sku" class="handle-input mr10"></el-input>
                 <el-button style="margin-left:10px" type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
@@ -162,7 +161,7 @@ export default {
             orderListVisible:false,
             pageTotal: 0,
             setReturnform:{
-                returnTime:Date
+                //returnTime:Date
             },
             courierTableData: [],
             multiShop: [],
@@ -243,14 +242,38 @@ export default {
                 return ;
             }
             let str = '';
+            let shopNames='';
             this.delList = this.delList.concat(this.multipleSelection);
-            this.setReturnform=this.multipleSelection[0];
-            this.setReturnform.sku=this.retrunQuery.sku;
-            this.setReturnform.courier=this.retrunQuery.courier;
+            //this.setReturnform=this.multipleSelection[0];
+            //this.setReturnform.sku=this.retrunQuery.sku;
+            let skuList=[];
             for (let i = 0; i < length; i++) {
                 str += this.multipleSelection[i].id + ',';
+                shopNames+=this.multipleSelection[i].shopName + ',';
+                let _skus=this.multipleSelection[i].sku.split('+');
+                for(let j = 0; j < _skus.length; j++){
+                    let _sku=_skus[j].split('@');
+                    let _count=1;
+                    if (_sku.length==2 ){
+                        _count=Number(_sku[1]);
+                    }
+                    let _s=skuList.find(x=>x.sku==_sku[0]);
+                    if (null==_s){
+                        skuList.push({sku:_sku[0],count:_count});
+                    }else{
+                        _s.count+=_count;
+                    }
+                }
             }
+            console.log(skuList);
+            let skustring='';
+            skuList.forEach(function (item,index,input) {
+                skustring+=item.sku+"数量:"+item.count+"\r";
+            });
+            this.setReturnform.sku=skustring;
             this.setReturnform.Oids=str.substring(0,str.length-1);
+            this.setReturnform.shopName=shopNames.substring(0,shopNames.length-1);
+            this.setReturnform.courier=this.retrunQuery.courier;
             this.multipleSelection = [];
             this.setReturnVisible = true;
         },
