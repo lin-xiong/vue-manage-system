@@ -12,6 +12,7 @@
                 <el-input v-model="query.shopName" placeholder="商铺名称/sku" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" @click="handleAdd">添加</el-button>
+                <el-button type="primary" icon="el-icon-add" @click="Refresh">随机排序任务</el-button>
             </div>
             <el-table
                 :data="tableData"
@@ -200,6 +201,7 @@ import { taskSearchData } from '../../api/index';
 import { taskAddData } from '../../api/index';
 import { shopListData } from '../../api/index';
 import { taskTypeListData } from '../../api/index';
+import { refreshOrderData } from '../../api/index';
 
 import { taskExeData } from '../../api/index';
 import { regionListData } from '../../api/index';
@@ -252,6 +254,14 @@ export default {
                 this.taskTypes = res.taskType;
             });
 
+        },
+        //重新排序
+        Refresh(){
+            refreshOrderData().then(res => {
+               this.$confirm('刷新成功', '提示', {
+                        type: 'warning'
+                    }).catch(() => {});
+            });
         },
         // 触发搜索按钮
         handleSearch() {
@@ -378,7 +388,11 @@ export default {
         // 分页导航
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
-            this.getData();
+            taskSearchData(this.query).then(res => {
+                console.log(res);
+                this.tableData = res.data;
+                this.pageTotal = res.pageTotal ;
+            });
         },
         formatDate(row, column) {
             // 获取单元格数据
@@ -402,17 +416,7 @@ export default {
         formatTaskType(row, column) {
             // 获取单元格数据
                 let data = row[column.property];
-                if(data == 1) return "一路购";
-                if(data==2) return "已加再购";
-                if(data==3) return "评价";
-                if(data==4) return "下自营单";
-                if(data==5) return "下超市单";
-                if(data==6) return "下自己单";
-                if(data==10) return "只加购";
-                if(data==11) return "只下单";
-                if(data==12) return "只下单(公司付)";
-                if(data==13) return "只下单(货到付款)";
-                if(data==15) return "只领券";
+                return this.taskTypes.find(x=>x.key==data).label;
         }
     }
 };

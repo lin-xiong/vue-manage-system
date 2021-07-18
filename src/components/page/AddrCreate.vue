@@ -2,34 +2,10 @@
     <div>
         <div class="container" style="padding:0px;">
             <div class="handle-box" style="padding:8px 0px 0px 5px;">
-                <el-select v-model="query.shopName"  placeholder="选择店铺">
-                    <el-option v-for="item in multiShop" :key="item.id" :label="item.shopName" :value="item.shopName" ></el-option>
-                </el-select>
-                <el-date-picker
-                    type="date"
-                    placeholder="开始日期"
-                    v-model="query.begin"
-                    value-format="yyyy-MM-dd"
-                    width="10"
-                ></el-date-picker><span>-</span>
-                <el-date-picker
-                    type="date"
-                    placeholder="结束日期"
-                    v-model="query.end"
-                    value-format="yyyy-MM-dd"
-                ></el-date-picker>
-                <!-- <el-date-picker
-                    v-model="pickerDate"
-                    type="daterange"
-                    range-separator="至"
-                    start-placeholder="开始日期"
-                    :picker-options="pickerBeginDateBefore"
-                    :default-value="timeDefaultShow"
-                    end-placeholder="结束日期"
-                    size="small"
-                    class="margin-right-10">
-                </el-date-picker>  -->
-                <el-button style="margin-left:10px" type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                <el-input v-model="query.count" placeholder="要生成的地址数量" class="handle-input mr10"></el-input>
+                <el-input v-model="query.addrids" placeholder="地址编号" class="handle-input mr10"></el-input>
+                <el-input v-model="query.shortName" placeholder="备注" class="handle-input mr10"></el-input>
+                <el-button style="margin-left:10px" type="primary" icon="el-icon-search" @click="createAddr">生成</el-button>
                 <el-button type="primary" icon="el-icon-cherry" @click="exportExcel">导出</el-button>
                 <span style="padding:8px 0px 0px 5px;">总计:{{totalCount}}</span>
                 <!-- <el-button type="primary" icon="el-icon-cold-drink" @click="chargeback">退单</el-button> -->
@@ -46,17 +22,8 @@
                 :stripe="true"
                 id="caseListTable"
             >
-                <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
-                <el-table-column prop="shopName"  label="店铺名称" align="center"></el-table-column>
-                <el-table-column prop="keyword" label="关键词" align="center"></el-table-column>
-                <el-table-column prop="sku"  label="SKU" align="center"></el-table-column>
-                <el-table-column prop="tel"  label="手机号" width="115" align="center"></el-table-column>
-                <el-table-column prop="orderid"  label="订单号" width="120" align="center"></el-table-column>
-                <el-table-column prop="price"  label="价格" align="center"></el-table-column>
-                <el-table-column prop="telNo" label="操作手机" width="80" align="center"></el-table-column> 
-                <el-table-column prop="status" label="状态" width="120" align="center" :formatter="formatStatus" ></el-table-column>
-                <el-table-column prop="commission"  label="佣金" width="80" align="center"></el-table-column>
-                <el-table-column prop="addr" label="收货地址" align="center" :formatter="formatAddr"></el-table-column>
+               
+                <el-table-column prop="addr" label="收货信息" align="center" ></el-table-column>
                
             </el-table>
  
@@ -73,17 +40,7 @@
                 v-show="false"
                 id="caseListTableExport"
             >
-                <el-table-column prop="exeTime" label="日期" width="80" align="center" :formatter="formatDate"></el-table-column>
-                <el-table-column prop="shopName"  label="店铺名称" align="center"></el-table-column>
-                <el-table-column prop="keyword" label="关键词" align="center"></el-table-column>
-                <el-table-column prop="sku"  label="SKU" align="center" :formatter="formatNum"></el-table-column>
-                <el-table-column prop="tel"  label="手机号" width="110" align="center" :formatter="formatNum"></el-table-column>
-                <el-table-column prop="orderid"  label="订单号" width="120" align="center" :formatter="formatNum"></el-table-column>
-                <el-table-column prop="addr" label="收货地址" align="center" ></el-table-column>
-                <el-table-column prop="price"  label="价格" align="center"></el-table-column>
-                <el-table-column prop="commission"  label="佣金" align="center"></el-table-column>
-                <el-table-column prop="shortName" label="商品备注" width="80" align="center"></el-table-column> 
-<el-table-column prop="telNo" label="操作手机" width="80" align="center"></el-table-column> 
+               <el-table-column prop="addr" label="收货信息" align="center" ></el-table-column> 
             </el-table>
 
         </div>
@@ -92,7 +49,7 @@
 </template>
 
 <script>
-import { exportOrderData } from '../../api/index';
+import { createAddrData } from '../../api/index';
 import { shopListData } from '../../api/index';
 import FileSaver from 'file-saver';
 import XLSX from 'xlsx';
@@ -101,7 +58,7 @@ export default {
     data() {
         return {
             query: {
-                status:1000
+                
             },
             tableData: [],
             multipleSelection: [],
@@ -158,16 +115,12 @@ export default {
             
         },
         // 触发搜索按钮
-        handleSearch() {
+        createAddr() {
             //this.$set(this.query, 'pageIndex', 1);
-            console.log(this.query); 
-            if (this.query.shopName=='全部')
-                this.$set(this.query, 'shopName', '');
-            exportOrderData(this.query).then(res => {
+            createAddrData(this.query).then(res => {
                 console.log(res);
-                this.tableData = res.data;
-                //this.pageTotal = res.pageTotal ;
-                this.totalCount=res.data.length;
+               this.tableData = res.data;
+
             });
         },
         // 执行操作
@@ -337,12 +290,12 @@ export default {
             bookSST: true,
             type: "array"
         });
-        var fn="";
-        if (this.query.shopName!=null) fn=fn+this.query.shopName+"_";
-        if(this.query.begin==this.query.end) 
-            fn=fn+this.query.begin;
-        else
-            fn=fn+this.query.begin+"到"+this.query.end;
+        var fn="addr";
+        // if (this.query.shopName!=null) fn=fn+this.query.shopName+"_";
+        // if(this.query.begin==this.query.end) 
+        //     fn=fn+this.query.begin;
+        // else
+        //     fn=fn+this.query.begin+"到"+this.query.end;
         fn=fn+".xlsx";
         try {
             FileSaver.saveAs(

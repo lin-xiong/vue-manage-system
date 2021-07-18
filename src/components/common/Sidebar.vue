@@ -90,6 +90,16 @@ export default {
                     icon: 'el-icon-lx-global',
                     index: 'goodsList',
                     title: '货物导出表'
+                },
+                {
+                    icon: 'el-icon-lx-emoji',
+                    index: 'OPorder',
+                    title: '手工补单'
+                },
+                {
+                    icon: 'el-icon-lx-emoji',
+                    index: 'AddrCreate',
+                    title: '地址生成'
                 }
             ]
         };

@@ -24,7 +24,7 @@
                 <el-table-column prop="price" label="价格" width="80" align="center"></el-table-column>
                 <el-table-column prop="status" label="状态" width="120" align="center" :formatter="formatStatus" ></el-table-column>
                 <el-table-column prop="taskType" label="任务类型" width="105" align="center" :formatter="formatTaskType" sortable="custom"></el-table-column>
-                <el-table-column prop="addr" label="收货地址" width="80" align="center" :formatter="formatAddr"></el-table-column>
+                <el-table-column prop="addrID" label="收货编码" width="80" align="center" ></el-table-column>
                 <el-table-column prop="exeTime" label="执行时间" align="center" :formatter="formatDate"></el-table-column>
                
             </el-table>
@@ -36,6 +36,7 @@
 
 <script>
 import { CaseListData } from '../../api/index'; 
+import { taskTypeListData } from '../../api/index';
 import FileSaver from 'file-saver';
 import XLSX from 'xlsx';
 export default {
@@ -55,6 +56,7 @@ export default {
             editAddrform:{},
             addAddrform:{},
             multiShop: [],
+            taskTypes: {},
             form: {},
             idx: -1,
             id: -1,
@@ -79,6 +81,10 @@ export default {
                     this.setTimer=setTimeout(() => {
                         this.getData();
                     }, 2000);
+            });
+            taskTypeListData().then(res => {
+                console.log(res);
+                this.taskTypes = res.taskType;
             });
             
         },
@@ -228,17 +234,7 @@ export default {
         formatTaskType(row, column) {
             // 获取单元格数据
                 let data = row[column.property];
-                if(data == 1) return "一路购";
-                if(data==2) return "已加再购";
-                if(data==3) return "评价";
-                if(data==4) return "下自营单";
-                if(data==5) return "下超市单";
-                if(data==6) return "下自己单";
-                if(data==10) return "只加购";
-                if(data==11) return "只下单";
-                if(data==12) return "只下单(公司付)";
-                if(data==13) return "只下单(货到付款)";
-                if(data==15) return "只领券";
+                return this.taskTypes.find(x=>x.key==data).label;
         }
     },
     deactivated()

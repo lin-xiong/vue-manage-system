@@ -60,6 +60,16 @@ export default new Router({
                     meta: { title: '物品导出' , permission: true }
                 },
                 {
+                    path: '/OPorder',
+                    component: () => import(/* webpackChunkName: "icon" */ '../components/page/OPorder.vue'),
+                    meta: { title: '手工补订单' , permission: true }
+                },
+                {
+                    path: '/AddrCreate',
+                    component: () => import(/* webpackChunkName: "icon" */ '../components/page/AddrCreate.vue'),
+                    meta: { title: '生成地址' , permission: false }
+                },
+                {
                     // 权限页面
                     path: '/permission',
                     component: () => import(/* webpackChunkName: "permission" */ '../components/page/Permission.vue'),

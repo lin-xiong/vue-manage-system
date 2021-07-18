@@ -12,12 +12,10 @@
                 <el-input v-model="query.courier" placeholder="快递员、编码、地址" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" @click="handleAdd">添加</el-button>
-                <el-button
-                    type="primary"
-                    icon="el-icon-delete"
-                    class="handle-del mr10"
-                    @click="delAllSelection"
-                >批量失效</el-button>
+                <el-button type="primary" icon="el-icon-delete" class="handle-del mr10"  @click="delAllSelection" >批量失效</el-button>
+                <el-button type="primary" icon="el-icon-edit" class="handle-del mr10"  @click="shengxiaoAllSelection" >批量生效</el-button>
+                <!-- <el-input v-model="query1.count" placeholder="要生成的地址数量" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-add" class="handle-del mr10" @click="CreateAddrAllSelection" >批量生成地址</el-button> -->
             </div>
             <el-table
                 :data="tableData"
@@ -151,6 +149,7 @@ import { addrAddData } from '../../api/index';
 import { addrTestData } from '../../api/index';
 import { regionListData } from '../../api/index';
 
+
 import { shopListData } from '../../api/index';
 
 export default {
@@ -160,6 +159,9 @@ export default {
             query: {
                 pageIndex: 1,
                 pageSize: 10
+            },
+            query1: {
+                count:1
             },
             tableData: [],
             multipleSelection: [],
@@ -237,6 +239,30 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
+        // CreateAddrAllSelection(){ 
+        //     this.$set(this.query1, 'addrs', this.multipleSelection);
+        //     addrCreateData(this.query1).then(res => {
+            
+        //     });
+        //     this.multipleSelection = [];
+        // },
+        shengxiaoAllSelection() {
+            const length = this.multipleSelection.length;
+            let str = '';
+            //this.delList = this.delList.concat(this.multipleSelection);
+            //console.log(this.delList);
+            for (let i = 0; i < length; i++) {
+                this.multipleSelection[i].status=1;
+                addrEditData(this.multipleSelection[i]).then(res => {
+                //console.log(res);
+                if(res==1)
+                 {  
+                    //this.$message.error(`删除了${str}`);
+                 }
+            });
+            }
+             this.multipleSelection = [];
+        },
         delAllSelection() {
             const length = this.multipleSelection.length;
             let str = '';
@@ -302,7 +328,11 @@ export default {
         // 分页导航
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
-            this.getData();
+            addrSearchData(this.query).then(res => {
+                console.log(res);
+                this.tableData = res.data;
+                this.pageTotal = res.pageTotal ;
+            });
         },
         formatDate(row, column) {
             // 获取单元格数据

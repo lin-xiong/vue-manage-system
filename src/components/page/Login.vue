@@ -59,7 +59,7 @@ export default {
                         if(res.code)
                          {  
                             localStorage.setItem('ms_username', this.param.username);
-                            localStorage.setItem('ms_ps', this.param.password);
+                            localStorage.setItem('ms_ps', res.user.ps);
                             var pp = res.user.path.split(';');
                             localStorage.setItem('ms_paths', pp);
                             this.$message.success('登录成功');

@@ -337,7 +337,13 @@ export default {
         // 分页导航
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
-            this.getData();
+            // if (this.query.shopName=='全部')
+            //     this.$set(this.query, 'shopName', '');
+            goodsSearchData(this.query).then(res => {
+                console.log(res);
+                this.goodsTableData = res.data;
+                this.totalCount=res.data.length;
+            });
         },
         formatDateTime(row, column) {
             // 获取单元格数据

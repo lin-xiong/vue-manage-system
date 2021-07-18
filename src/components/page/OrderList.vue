@@ -235,7 +235,11 @@ export default {
         // 分页导航
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
-            this.getData();
+            orderSearchData(this.query).then(res => {
+                console.log(res);
+                this.tableData = res.data;
+                this.pageTotal = res.pageTotal ;
+            });
         },
         formatDate(row, column) {
             // 获取单元格数据

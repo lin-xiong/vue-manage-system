@@ -18,7 +18,7 @@
         {
             "key":4,
             "value": "4",
-            "label": "先下自营再购"
+            "label": "先下其他sku再购"
         },
         {
             "key":5,
@@ -54,6 +54,11 @@
             "key":15,
             "value": "15",
             "label": "只领券"
+        },
+        {
+            "key":16,
+            "value": "16",
+            "label": "手动补单"
         }],
     "pageTotal": 7
  }

@@ -25,15 +25,8 @@
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
                 <el-table-column prop="shopName" label="店铺名" align="center"></el-table-column>
                 <el-table-column prop="shortName" label="备注简称" width="80" align="center"></el-table-column>
-                
-                <el-table-column prop="youHuiQuan" label="优惠券" align="center">
-                    <!-- <template slot-scope="scope">
-                        <span v-html="scope.row.youHuiQuan"></span>
-                    </template> -->
-                    <!-- <template slot-scope="scope">
-                        <el-image  class="table-td-thumb" :src="scope.row.youHuiQuan"></el-image>
-                    </template> -->
-                </el-table-column>
+                <el-table-column prop="commission" label="佣金" width="80" align="center"></el-table-column> 
+               
                 <el-table-column prop="courierCount" label="每区快递数"  :formatter="formatCourierCount" align="center">
                   
                 </el-table-column>
@@ -74,11 +67,11 @@
                 <el-form-item label="店铺名称">
                     <el-input v-model="editShopform.shopName"></el-input>
                 </el-form-item>
-                <el-form-item label="优惠券">
-                    <el-input v-model="editShopform.youHuiQuan"></el-input>
-                </el-form-item>
                 <el-form-item label="备注简称">
                     <el-input v-model="editShopform.shortName"></el-input>
+                </el-form-item>
+                <el-form-item label="佣金">
+                    <el-input v-model="editShopform.commission"></el-input>
                 </el-form-item>
                 <el-form-item label="每区快递数">
                     <el-input v-model="editShopform.courierCount"></el-input>
@@ -99,14 +92,17 @@
                 <el-form-item label="店铺名称">
                     <el-input v-model="addShopform.shopName"></el-input>
                 </el-form-item>
-                <el-form-item label="优惠券">
+                <!-- <el-form-item label="优惠券">
                     <el-input v-model="addShopform.youHuiQuan"></el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="手机">
                     <el-input v-model="addShopform.tel"></el-input>
                 </el-form-item>
                 <el-form-item label="备注简称">
                     <el-input v-model="addShopform.shortName"></el-input>
+                </el-form-item>
+                <el-form-item label="佣金">
+                    <el-input v-model="addShopform.commission"></el-input>
                 </el-form-item>
                 <el-form-item label="每区快递数">
                     <el-input v-model="addShopform.courierCount"></el-input>
@@ -245,7 +241,11 @@ export default {
         // 分页导航
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
-            this.getData();
+            shopSearchData(this.query).then(res => {
+                console.log(res);
+                this.tableData = res.data;
+                this.pageTotal = res.pageTotal ;
+            });
         },
         formatCourierCount(row, column) {
             // 获取单元格数据

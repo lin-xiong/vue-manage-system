@@ -1,38 +1,16 @@
 <template>
     <div>
         <div class="container" style="padding:0px;">
-            <div class="handle-box" style="padding:8px 0px 0px 5px;">
-                <el-select v-model="query.shopName"  placeholder="选择店铺">
-                    <el-option v-for="item in multiShop" :key="item.id" :label="item.shopName" :value="item.shopName" ></el-option>
-                </el-select>
-                <el-input v-model="query.courier" placeholder="快递员" class="handle-input mr10"></el-input>
-                <el-input v-model="query.sku" placeholder="sku" class="handle-input mr10"></el-input>
-                <el-button style="margin-left:10px" type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-                <el-button type="primary" icon="el-icon-add" @click="exportExcel">导出</el-button>
-                <el-button type="primary" icon="el-icon-cold-drink" @click="returnGoods">回收货物</el-button>
-            </div>
-            <el-table :data="goodsTableData" :default-sort = "{prop: 'exeTime', order: 'descending'}" border class="table" ref="multipleTable" header-cell-class-name="table-header" :height="700" :stripe="true" id="goodsListTable">
-                <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
-                <el-table-column prop="shopName"  label="店铺名称" align="center" width="150"></el-table-column>
-                <el-table-column prop="sku"  label="SKU" align="center" width="150" ></el-table-column>
-                <el-table-column prop="returnAddr"  label="回寄信息" align="center"></el-table-column>
-            </el-table>
-        </div>
-
-      <!-- 回收货物操作弹出框 -->
-        <el-dialog title="回收货物操作" :visible.sync="returnVisible" width="80%">
-            <el-table :data="courierTableData" border class="table" ref="multipleTable" header-cell-class-name="table-header" @selection-change="handleSelectionChange" :stripe="true" id="orderTable" >
-                <el-table-column prop="courier"  label="快递员" width="270" align="center"></el-table-column>
-                <el-table-column prop="count"  label="件数" align="center" width="100"></el-table-column>
-            </el-table>
-            <div class="container" style="padding:0px;">
             <div style="padding:8px 0px 0px 5px; ">
                 <el-input v-model="retrunQuery.sku" placeholder="sku" class="handle-input mr10" style="width:150px"></el-input>
                 <el-input v-model="retrunQuery.courier" placeholder="快递员" class="handle-input mr10" style="width:200px"></el-input>
                 <el-button style="margin-left:10px" type="primary" icon="el-icon-search" @click="handleHHSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" @click="setReturn">寄回</el-button>
-            </div>
-            <el-table :data="orderTableData" :default-sort = "{prop: 'exeTime', order: 'asc'}" border class="table" ref="multipleTable" header-cell-class-name="table-header" @selection-change="handleSelectionChange" :height="600" :stripe="true" id="orderTable" >
+                <el-button type="primary" icon="el-icon-add" @click="returnGoods">物流列表</el-button>
+            </div> 
+           
+            <div class="container" style="padding:0px; width:78%; float:left;">
+            <el-table :data="orderTableData" :default-sort = "{prop: 'courier' , exeTime: 'asc'}" border class="table" ref="multipleTable" header-cell-class-name="table-header" @selection-change="handleSelectionChange" :height="700" :stripe="true" id="orderTable" >
                 <el-table-column prop="id1" label="序号" type="index" width="50" align="center"></el-table-column>
                 <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
                 <el-table-column prop="shopName"  label="店铺名称" width="180" align="center"></el-table-column>
@@ -44,10 +22,16 @@
                 <el-table-column prop="addr" label="收货地址" align="center" :formatter="formatAddr"></el-table-column>
                 <el-table-column type="selection" width="55" align="center"></el-table-column>
             </el-table>
+           </div>
+            <div class="container" style="padding:0px; width:18%; float:right;">
+            <el-table :data="courierTableData" border class="table" ref="multipleTable" header-cell-class-name="table-header" @selection-change="handleSelectionChange" :stripe="true" id="orderTable" >
+                <el-table-column prop="courier"  label="快递员" width="270" align="center"></el-table-column>
+                <el-table-column prop="count"  label="件数" align="center" width="50"></el-table-column>
+            </el-table>
             </div>
-        </el-dialog>
-        <!-- 编辑弹出框 -->
-        <el-dialog title="回寄设置" :visible.sync="setReturnVisible" width="30%">
+        </div>
+   <!-- 回收货物操作弹出框 -->
+<el-dialog title="回寄设置" :visible.sync="setReturnVisible" width="30%">
             <el-form ref="setReturnform" :model="setReturnform" label-width="70px">
                 <el-form-item label="店铺名称">
                     <el-input v-model="setReturnform.shopName" readonly="true"></el-input>
@@ -74,8 +58,6 @@
                                 style="width: 100%;"
                             ></el-date-picker>
                         </el-col>
-                
-                
                 </el-form-item>
                 <el-form-item label="操作单号">
                     <el-input v-model="setReturnform.Oids" type="textarea" rows="2" readonly="true"></el-input>
@@ -86,6 +68,63 @@
                 <el-button type="primary" @click="saveReturnform">确 定</el-button>
             </span>
         </el-dialog>
+
+      <!-- 物流列表 -->
+        <el-dialog title="物流列表" :visible.sync="returnVisible" width="80%">
+            <div class="container" style="padding:0px;">
+            <div class="handle-box" style="padding:8px 0px 0px 5px;">
+                <el-select v-model="query.shopID"  placeholder="选择店铺">
+                    <el-option v-for="item in multiShop" :key="item.id" :label="item.shopName" :value="item.id" ></el-option>
+                </el-select>
+                <el-input v-model="query.courier" placeholder="快递员" class="handle-input mr10"></el-input>
+                <el-input v-model="query.sku" placeholder="sku" class="handle-input mr10"></el-input>
+                <el-button style="margin-left:10px" type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+            </div>
+            <el-table :data="goodsTableData" :default-sort = "{prop: 'returnTime', status: 'asc'}" border class="table" ref="multipleTable" header-cell-class-name="table-header" :height="550" :stripe="true" 
+             @row-click="getOrderList" id="goodsListTable">
+                <el-table-column prop="oids" v-if="false"></el-table-column> 
+                <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
+                <el-table-column prop="shopName"  label="店铺名称" align="center" width="150"></el-table-column>
+                <el-table-column prop="sku"  label="SKU" align="center" width="150" ></el-table-column>
+                <el-table-column prop="returnAddr"  label="回寄信息" align="center"></el-table-column>
+                <el-table-column prop="courier"  label="快递员" align="center"></el-table-column>
+                <el-table-column label="进度" width="120" align="center" prop="status">
+                    <template slot-scope="scope">
+                        <el-span v-show='scope.row.status==1' >途中</el-span>
+                        <el-span v-show='scope.row.status==10' >已完成</el-span>
+                        <el-button type="text" icon="el-icon-lx-copy" @click="handleGot(scope.$index, scope.row)" 
+                         v-show='scope.row.status==1' >收到</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination">
+                <el-pagination
+                    background
+                    layout="total, prev, pager, next"
+                    :current-page="query.pageIndex"
+                    :page-size="query.pageSize"
+                    :total="pageTotal"
+                    @current-change="handlePageChange"
+                ></el-pagination>
+            </div>
+        </div>
+        </el-dialog>
+        <!-- 详细订单弹出框 -->
+        <el-dialog title="详细订单" :visible.sync="orderListVisible">
+            <div class="container" style="padding:0px; ">
+            <el-table :data="orderListData" :default-sort = "{prop: 'exeTime'}" border class="table" ref="multipleTable" header-cell-class-name="table-header" @selection-change="handleSelectionChange" :height="700" :stripe="true" id="orderTable" >
+                <el-table-column prop="id1" label="序号" type="index" width="50" align="center"></el-table-column>
+                <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
+                <el-table-column prop="shopName"  label="店铺名称" width="180" align="center"></el-table-column>
+                <el-table-column prop="sku"  label="SKU" width="210" align="center"></el-table-column>
+                <el-table-column prop="courier"  label="快递员" width="115" align="center"></el-table-column>
+                <el-table-column prop="orderid"  label="订单号" width="120" align="center"></el-table-column>
+                <el-table-column prop="price"  label="价格" width="70" align="center"></el-table-column>
+                <el-table-column prop="exeTime"  label="执行时间" align="center" width="100" :formatter="formatDate"></el-table-column>
+                <el-table-column prop="addr" label="收货地址" align="center" :formatter="formatAddr"></el-table-column>
+            </el-table>
+           </div>
+        </el-dialog>
     </div>
 </template>
 
@@ -95,6 +134,7 @@ import { goodsSearchData } from '../../api/index';
 import { goodsAddData } from '../../api/index';
 import { shopListData } from '../../api/index';
 import { orderSearchData } from '../../api/index';
+import { getOrderListData } from '../../api/index';
 
 import FileSaver from 'file-saver';
 import XLSX from 'xlsx';
@@ -107,14 +147,19 @@ export default {
                 pageIndex: 1,
                 pageSize: 10
             },
-            retrunQuery:{},
+            retrunQuery:{
+                pageIndex: 1,
+                pageSize: 10
+                },
             orderTableData: [],
             goodsTableData: [],
             multipleSelection: [],
+            orderListData:[],
             delList: [],
             returnVisible: false,
             addVisible: false,
             setReturnVisible:false,
+            orderListVisible:false,
             pageTotal: 0,
             setReturnform:{
                 returnTime:Date
@@ -135,6 +180,7 @@ export default {
         console.log("created"); 
         if(!this.getDataOnce) return;
         this.getDataOnce=false;
+        this.handleHHSearch();
         this.getData();
     },
     methods: {
@@ -146,12 +192,6 @@ export default {
                 var allshop= {id:0,shopName:'全部'};
                 this.multiShop.splice(0,0,allshop);
             });
-            goodsSearchData(this.query).then(res => {//this.tableData
-                console.log(res); 
-                this.goodsTableData = res.data;
-            }).finally(res=>{
-                this.totalCount=res.data.length;
-            });
             
         },
         // 触发搜索按钮
@@ -160,9 +200,9 @@ export default {
             console.log(this.query); 
             if (this.query.shopName=='全部')
                 this.$set(this.query, 'shopName', '');
-            exportOrderData(this.query).then(res => {
+            goodsSearchData(this.query).then(res => {
                 console.log(res);
-                this.tableData = res.data;
+                this.goodsTableData = res.data;
                 this.totalCount=res.data.length;
             });
         },
@@ -192,8 +232,6 @@ export default {
         },
         // 回收货物操作
         returnGoods(index, row) {
-            // this.idx = index;
-            // this.editAddrform = row;
             this.returnVisible = true;
         },
         // 回收货物设置操作
@@ -229,6 +267,11 @@ export default {
                 this.$alert("请规范指定快递员");
                 return ;
             }
+            if (!this.setReturnform.returnTime)
+            {
+                this.$alert("请选择回寄日期");
+                return ;
+            }
             let oidslen=this.setReturnform.Oids.split(',').length;
            // 二次确认执行
             this.$confirm('确定回寄'+oidslen+'件商品吗？', '提示', {
@@ -237,7 +280,9 @@ export default {
                 goodsAddData(this.setReturnform).then(res => {
                     console.log(res);
                     if(res==1){
-                        this.getData();
+                        this.retrunQuery.sku=null;
+                        this.retrunQuery.courier=null;
+                        this.handleHHSearch();
                         this.setReturnVisible = false;
                         this.returnVisible = false;
                         this.$message.success('执行成功');
@@ -248,11 +293,34 @@ export default {
         // 多选操作
         handleSelectionChange(val) {
             this.multipleSelection = val;
+        },
+        handleGot(index, row){
+            row.status=10;
+            goodsEditData(row).then(res => {
+                 console.log(res);
+                    if(res==1){}
+            }).catch(() => {});
+        },
+        getOrderList(row, event, column) {
+            let oQuery={};
+            this.$set(oQuery, 'oids', row.oids);
+　　　　　　 getOrderListData(oQuery).then(res => {
+                 console.log(res);
+                 this.orderListData=res.data;
+                 this.orderListVisible=true;
+            }).catch(() => {});
+
         }, 
         // 分页导航
         handlePageChange(val) {
             this.$set(this.query, 'pageIndex', val);
-            this.getData();
+            // if (this.query.shopName=='全部')
+            //     this.$set(this.query, 'shopName', '');
+            goodsSearchData(this.query).then(res => {
+                console.log(res);
+                this.goodsTableData = res.data;
+                this.totalCount=res.data.length;
+            });
         },
         formatDateTime(row, column) {
             // 获取单元格数据
