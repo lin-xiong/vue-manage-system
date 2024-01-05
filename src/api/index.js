@@ -39,7 +39,7 @@ export const loginData = query => {
 //shop
 export const addShopData = query => {
     return request({
-        url: '/api/Shop/',
+        url: '/api/Shop/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/',
         method: 'post',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query
@@ -48,7 +48,7 @@ export const addShopData = query => {
 
 export const shopListData = query => {
     return request({
-        url: '/api/Shop/all',
+        url: '/api/Shop/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/all',
         method: 'get',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query
@@ -57,7 +57,7 @@ export const shopListData = query => {
 
 export const shopSearchData = query => {
     return request({
-        url: '/api/Shop/search',
+        url: '/api/Shop/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/search',
         method: 'get',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query
@@ -66,7 +66,7 @@ export const shopSearchData = query => {
 
 export const shopEditData = query => {
     return request({
-        url: '/api/Shop/',
+        url: '/api/Shop/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/',
         method: 'put',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query
@@ -75,8 +75,70 @@ export const shopEditData = query => {
 
 export const shopAddData = query => {
     return request({
-        url: '/api/Shop/',
+        url: '/api/Shop/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/',
         method: 'post',
+        headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
+        params: query
+    });
+};
+
+//sales
+export const salesListData = query => {
+    return request({
+        url: '/api/sales/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/all',
+        method: 'get',
+        headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
+        params: query
+    });
+};
+
+export const salesSearchData = query => {
+    return request({
+        url: '/api/sales/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/search',
+        method: 'get',
+        headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
+        params: query
+    });
+};
+
+export const salesEditData = query => {
+    return request({
+        url: '/api/sales/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/',
+        method: 'put',
+        headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
+        params: query
+    });
+};
+
+export const salesAddData = query => {
+    //alert(query[0].title);
+    return request({
+        url: '/api/sales/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/',
+        method: 'post',
+        headers:{
+            'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0",
+            'Content-Type': 'application/json'
+        },
+        data: query
+    });
+};
+
+export const salesFileData = query => {
+    return request({
+        url: '/api/sales/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/',
+        method: 'post',
+        headers:{
+            'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0",
+            'Content-Type': 'multipart/form-data'
+        },
+        params: query
+    });
+};
+//执行中的任务
+export const SalesRunningListData = query => {
+    return request({
+        url: '/api/SalesRunning/all/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/',
+        method: 'get',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query
     });
@@ -85,7 +147,7 @@ export const shopAddData = query => {
 //task
 export const taskListData = query => {
     return request({
-        url: '/api/Task/all',
+        url: '/api/Task/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/all',
         method: 'get',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query
@@ -94,7 +156,7 @@ export const taskListData = query => {
 
 export const taskSearchData = query => {
     return request({
-        url: '/api/Task/search',
+        url: '/api/Task/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/search',
         method: 'get',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query
@@ -103,7 +165,7 @@ export const taskSearchData = query => {
 
 export const taskEditData = query => {
     return request({
-        url: '/api/Task/',
+        url: '/api/Task/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/',
         method: 'put',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query
@@ -112,7 +174,7 @@ export const taskEditData = query => {
 
 export const taskAddData = query => {
     return request({
-        url: '/api/Task/',
+        url: '/api/Task/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/',
         method: 'post',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query
@@ -121,7 +183,7 @@ export const taskAddData = query => {
 
 export const taskExeData = query => {
     return request({
-        url: '/api/Task/Exe',
+        url: '/api/Task/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/Exe',
         method: 'post',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query
@@ -130,7 +192,7 @@ export const taskExeData = query => {
 
 export const refreshOrderData = query => {
     return request({
-        url: '/api/Task/refresh',
+        url: '/api/Task/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/refresh',
         method: 'post',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query
@@ -140,7 +202,7 @@ export const refreshOrderData = query => {
 //addr
 export const addrListData = query => {
     return request({
-        url: '/api/Addr/all',
+        url: '/api/Addr/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/all',
         method: 'get',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query
@@ -149,7 +211,7 @@ export const addrListData = query => {
 
 export const addrSearchData = query => {
     return request({
-        url: '/api/Addr/search',
+        url: '/api/Addr/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/search',
         method: 'get',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query
@@ -158,7 +220,7 @@ export const addrSearchData = query => {
 
 export const addrEditData = query => {
     return request({
-        url: '/api/Addr/',
+        url: '/api/Addr/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/',
         method: 'put',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query
@@ -167,7 +229,7 @@ export const addrEditData = query => {
 
 export const addrAddData = query => {
     return request({
-        url: '/api/Addr/',
+        url: '/api/Addr/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/',
         method: 'post',
         headers:{'X-User-Agent':'Supervisor/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+"/1.0"},
         params: query

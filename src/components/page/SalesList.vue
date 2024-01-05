@@ -8,10 +8,17 @@
             </el-breadcrumb>
         </div>
         <div class="container">
-            <div class="handle-box">
-                <el-input v-model="query.shopName" placeholder="商铺名称" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
-                <el-button type="primary" icon="el-icon-add" @click="handleAdd">添加</el-button>
+            <div class="handle-box" style="padding:8px 0px 0px 5px;">
+                <el-select v-model="query.shopId"  placeholder="选择店铺">
+                    <el-option v-for="item in multiShop" :key="item.id" :label="item.shopName" :value="item.id" ></el-option>
+                </el-select>
+                <el-input v-model="query.salesSql" placeholder="商品信息" class="handle-input mr10"></el-input>
+                <el-button style="margin-left:10px" type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                <input type="file" @change="handleFileUpload" />
+                <el-button type="primary" icon="el-icon-cherry" @click="processData">导入</el-button>
+                <el-button type="primary" icon="el-icon-cherry" @click="fileData">文件导入</el-button>
+                <!-- <span style="padding:8px 0px 0px 5px;">总计:{{totalCount}}</span> -->
+                <!-- <el-button type="primary" icon="el-icon-cold-drink" @click="chargeback">退单</el-button> -->
             </div>
             <el-table
                 :data="tableData"
@@ -23,21 +30,27 @@
                 :stripe="true"
             >
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="shopName" label="店铺名" align="center"></el-table-column>
-                <!-- <el-table-column prop="shortName" label="备注简称" width="120" align="center"></el-table-column> -->
-                <el-table-column prop="tel" label="电话" align="center" width="150" ></el-table-column>
-                <el-table-column prop="ks_Id" label="对应快手号" align="center" width="150" ></el-table-column>
-                <el-table-column prop="ks_SMR" label="快手实名人" align="center" width="100" ></el-table-column>
-                <el-table-column prop="shop_SMR" label="店铺实名人" align="center" width="100" ></el-table-column>
-                <el-table-column prop="execCountDay" label="今天已发布" align="center" width="95" ></el-table-column>
-                <el-table-column prop="MaxExecDay" label="最大执行数" align="center" width="95" ></el-table-column>
-                <el-table-column prop="status" label="状态" width="50" align="center">
-                    <template slot-scope="scope"> 
-                        <span v-if="scope.row.status==1">生效</span>
-                        <span v-if="scope.row.status==0">失效</span>
+                <el-table-column prop="ks_id" label="商品编号" width="155"  align="center"></el-table-column>
+                <el-table-column label="头像" width="120">
+                    <template slot-scope="scope">
+                        <img :src="scope.row.picUrl.split('\r\n')[0]" alt="avatar" style="width: 50px; height: 50px;"
+                        v-tooltip="{ content: `<img src='${scope.row.picUrl.split('\r\n')[0]}' style='width: 400px;'>` }">
                     </template>
                 </el-table-column>
+                <el-table-column prop="title" label="商品名" align="center"></el-table-column>
+                <el-table-column prop="discription" label="简介" width="80" align="center"></el-table-column>
+                <el-table-column prop="type" label="分类" width="80" align="center"></el-table-column> 
             
+                <el-table-column prop="price" label="价格" align="center" width="90" ></el-table-column>
+                <el-table-column prop="execCount" label="已发视频数" align="center" width="95" ></el-table-column>
+                <el-table-column prop="status" label="状态" width="80" align="center">
+                    <template slot-scope="scope"> 
+                        <span v-if="scope.row.status==1">已执行</span>
+                        <span v-if="scope.row.status==0">待执行</span>
+                        <span v-if="scope.row.status==-100">不再执行</span>
+                    </template>
+                </el-table-column>
+                
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
                         <el-button
@@ -67,20 +80,14 @@
                 <el-form-item label="店铺名称">
                     <el-input v-model="editShopform.shopName"></el-input>
                 </el-form-item>
-                <el-form-item label="电话">
-                    <el-input v-model="editShopform.tel"></el-input>
+                <el-form-item label="备注简称">
+                    <el-input v-model="editShopform.shortName"></el-input>
                 </el-form-item>
-                <el-form-item label="对应快手号">
-                    <el-input v-model="editShopform.ks_Id"></el-input>
+                <el-form-item label="佣金">
+                    <el-input v-model="editShopform.commission"></el-input>
                 </el-form-item>
-                <el-form-item label="快手实名人">
-                    <el-input v-model="editShopform.ks_SMR"></el-input>
-                </el-form-item>
-                <el-form-item label="店铺实名人">
-                    <el-input v-model="editShopform.shop_SMR"></el-input>
-                </el-form-item>
-                <el-form-item label="当日最大执行量">
-                    <el-input v-model="editShopform.MaxExecDay"></el-input>
+                <el-form-item label="每区快递数">
+                    <el-input v-model="editShopform.courierCount"></el-input>
                 </el-form-item>
                 <el-form-item label="状态">
                     <el-input v-model="editShopform.status"></el-input>
@@ -104,17 +111,14 @@
                 <el-form-item label="手机">
                     <el-input v-model="addShopform.tel"></el-input>
                 </el-form-item>
-                <el-form-item label="对应快手号">
-                    <el-input v-model="addShopform.ks_Id"></el-input>
+                <el-form-item label="备注简称">
+                    <el-input v-model="addShopform.shortName"></el-input>
                 </el-form-item>
-                <el-form-item label="快手实名人">
-                    <el-input v-model="addShopform.ks_SMR"></el-input>
+                <el-form-item label="佣金">
+                    <el-input v-model="addShopform.commission"></el-input>
                 </el-form-item>
-                <el-form-item label="店铺实名人">
-                    <el-input v-model="addShopform.shop_SMR"></el-input>
-                </el-form-item>
-                <el-form-item label="当日最大执行量">
-                    <el-input v-model="addShopform.MaxExecDay"></el-input>
+                <el-form-item label="每区快递数">
+                    <el-input v-model="addShopform.courierCount"></el-input>
                 </el-form-item>
                 <el-form-item label="状态">
                     <el-input v-model="addShopform.status"></el-input>
@@ -129,18 +133,23 @@
 </template>
 
 <script>
+import { salesListData } from '../../api/index';
+import { salesEditData } from '../../api/index';
+import { salesSearchData } from '../../api/index';
+import { salesAddData } from '../../api/index';
+import { salesFileData } from '../../api/index';
+
 import { shopListData } from '../../api/index';
-import { shopEditData } from '../../api/index';
-import { shopSearchData } from '../../api/index';
-import { shopAddData } from '../../api/index';
+import FileSaver from 'file-saver';
+import XLSX from 'xlsx';
 
 export default {
-    name: 'shopList',
+    name: 'salesList',
     data() {
         return {
             query: {
                 pageIndex: 1,
-                pageSize: 30
+                pageSize: 10
             },
             tableData: [],
             multipleSelection: [],
@@ -150,9 +159,12 @@ export default {
             pageTotal: 0,
             editShopform:{},
             addShopform:{},
+            multiShop: [],
+            rowSalesform:{},
             form: {},
             idx: -1,
-            id: -1
+            id: -1,
+            file:null
         };
     },
     created() {
@@ -161,20 +173,89 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            shopListData(this.query).then(res => {
-                console.log(res);
-                this.tableData = res.data;
-                this.pageTotal = res.pageTotal ;
+            shopListData().then(res => {
+                this.multiShop = res.data ;
             });
         },
         // 触发搜索按钮
         handleSearch() {
             this.$set(this.query, 'pageIndex', 1);
-            shopSearchData(this.query).then(res => {
+            salesSearchData(this.query).then(res => {
                 console.log(res);
                 this.tableData = res.data;
                 this.pageTotal = res.pageTotal ;
             });
+        },
+        handleFileUpload(event) {
+            this.file = event.target.files[0];
+        },
+        processData() {
+            if (!this.file) {
+                alert('请先选择一个文件');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                // 获取第一个工作表
+                const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+                // 将工作表转换为 JSON 对象数组
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                var rowcount=0;
+                var rowerror=0;
+                var rowright=0;
+                var rows=[];
+                // 遍历数据
+                for (let row of jsonData) {
+                    var sales={};
+                    try {// 这里你可以处理每一行的数据  || rows.findIndex(rows[0])>0
+                        if(row[0]=="商品ID" || (rows !=null && rows.some(x=>x.sp_id==row[0])))
+                            continue;
+                        rowright=rowright+1;
+                        sales.sp_id=row[0];
+                        sales.title=row[1];
+                        sales.type=row[2];
+                        sales.discription=row[3];
+                        sales.picUrl=row[4];
+                        sales.status=0;//row[5];
+                        sales.price=row[9];
+                        sales.ks_id=this.file.name;
+                        rows.push(sales);
+                        
+                    } catch (error) {
+                        rowerror=rowerror+1;    
+                        console.error('处理第 ' + (jsonData.indexOf(row) + 1) + ' 行数据时发生错误：', error);
+                        continue;
+                    }
+                }
+                salesAddData(rows).then(res => {
+                            // rowcount=rowcount+1;
+                            alert('共完成数据：'+res+'条');
+                        });
+                        setTimeout(500);
+                //console.log(rows);  
+                console.log('共'+rowcount+'/'+rows.length+'有效数据被更新，总'+jsonData.length+'数据被导入,非法数据'+rowerror+'条');
+            };
+            reader.readAsArrayBuffer(this.file);
+        },
+        fileData(){
+            // let formData = new FormData();
+            // formData.append('file', this.file);
+
+            // axios.post('http://your-backend-server.com/upload', formData, {
+            //     headers: {
+            //     'Content-Type': 'multipart/form-data'
+            //     }
+            // }).then(response => {
+            //     console.log(response);
+            // }).catch(error => {
+            //     console.log(error);
+            // });
         },
         // 删除操作
         handleDelete(index, row) {

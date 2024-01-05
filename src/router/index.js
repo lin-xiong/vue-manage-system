@@ -25,6 +25,21 @@ export default new Router({
                     meta: { title: '店铺列表' , permission: true }
                 },
                 {
+                    path: '/salesList',
+                    component: () => import(/* webpackChunkName: "table" */ '../components/page/SalesList.vue'),
+                    meta: { title: '商品列表' , permission: true }
+                },
+                {
+                    path: '/termiRunning',
+                    component: () => import(/* webpackChunkName: "table" */ '../components/page/TermiRunning.vue'),
+                    meta: { title: '终端实时' , permission: false }
+                },
+                {
+                    path: '/salesRunning',
+                    component: () => import(/* webpackChunkName: "table" */ '../components/page/SalesRunning.vue'),
+                    meta: { title: '商品执行列表' , permission: true }
+                },
+                {
                     path: '/taskList',
                     component: () => import(/* webpackChunkName: "table" */ '../components/page/TaskList.vue'),
                     meta: { title: '任务列表' , permission: true }

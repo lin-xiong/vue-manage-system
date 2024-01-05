@@ -37,8 +37,8 @@ export default {
                 ps: ""
             },
             param: {
-                username: 'JDthd',
-                password: '',
+                username: 'thd123',
+                password: 'thd1234567',
             },
             rules: {
                 username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],

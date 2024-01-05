@@ -62,6 +62,21 @@ export default {
                     title: '店铺列表'
                 },
                 {
+                    icon: 'el-icon-lx-global',
+                    index: 'salesList',
+                    title: '商品操作表'
+                },
+                {
+                    icon: 'el-icon-lx-global',
+                    index: 'termiRunning',
+                    title: '终端实时日志'
+                },
+                {
+                    icon: 'el-icon-lx-global',
+                    index: 'salesRunning',
+                    title: '商品实时操作表'
+                },
+                {
                     icon: 'el-icon-lx-emoji',
                     index: 'taskList',
                     title: '任务列表'
