@@ -46,7 +46,7 @@
 
                 <el-table-column label="操作" width="120" align="center" prop="status">
                     <template slot-scope="scope">
-                         <el-button
+                        <el-button
                             type="text"
                             icon="el-icon-lx-copy"
                             @click="handleCopy(scope.$index, scope.row)" 
@@ -58,7 +58,7 @@
                             @click="handleStop(scope.$index, scope.row)"
                             v-show='scope.row.status==2'
                         >暂停</el-button><!--&& Date(scope.row.exeDate)>= Date("yyyy/MM/dd")-->
-                             <el-button
+                            <el-button
                             type="text"
                             icon="el-icon-share"
                             class="red"

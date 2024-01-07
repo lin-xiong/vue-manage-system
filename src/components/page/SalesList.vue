@@ -30,7 +30,8 @@
                 :stripe="true"
             >
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="ks_id" label="商品编号" width="155"  align="center"></el-table-column>
+                <el-table-column prop="ks_id" label="快手号" width="110"  align="center"></el-table-column>
+                <el-table-column prop="sp_id" label="商品编号" width="135"  align="center"></el-table-column>
                 <el-table-column label="头像" width="120">
                     <template slot-scope="scope">
                         <img :src="scope.row.picUrl.split('\r\n')[0]" alt="avatar" style="width: 50px; height: 50px;"
@@ -39,7 +40,7 @@
                 </el-table-column>
                 <el-table-column prop="title" label="商品名" align="center"></el-table-column>
                 <el-table-column prop="discription" label="简介" width="80" align="center"></el-table-column>
-                <el-table-column prop="type" label="分类" width="80" align="center"></el-table-column> 
+                <el-table-column prop="type" label="分类" width="120" align="center"></el-table-column> 
             
                 <el-table-column prop="price" label="价格" align="center" width="90" ></el-table-column>
                 <el-table-column prop="execCount" label="已发视频数" align="center" width="95" ></el-table-column>
@@ -149,7 +150,7 @@ export default {
         return {
             query: {
                 pageIndex: 1,
-                pageSize: 10
+                pageSize: 20
             },
             tableData: [],
             multipleSelection: [],

@@ -3,17 +3,19 @@
         <div class="container" style="padding:0px;">
             <el-table
                 :data="tableData"
-                :default-sort = "{prop: 'exeTime', order: 'descending'}"
+                :default-sort = "{prop: 'name', order: 'descending'}"
                 border
                 class="table"
                 ref="multipleTable"
                 header-cell-class-name="table-header"
-                @selection-change="handleSelectionChange"
+            
                 :height="700"
                 :stripe="true"
             >
                 <el-table-column prop="id" label="序号" type="index" width="80" align="center"></el-table-column>
-                <el-table-column prop="t" label="时间" width="150" align="center" :formatter="formatDate"></el-table-column>
+        
+                <el-table-column prop="user" label="终端" width="80" align="center" sortable></el-table-column>
+                <el-table-column prop="t" label="时间" width="150" align="center" :formatter="formatDate" sortable> </el-table-column>
                 <el-table-column prop="log" label="日志信息"  align="center"></el-table-column>
             
             </el-table>
@@ -37,12 +39,15 @@ export default {
     created() {
         console.log("created"); 
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl("http://192.168.123.200:5001/loghub")
-            .build();
+            // .withUrl("http://192.168.123.200:5001/loghub")
+            .withUrl("http://bt.qfpek.com:8181/loghub")
+            .build();       
 
         this.connection.on("ReceiveMessage", (user, message) => {
             // this.tableData.push(message);
-            this.tableData.unshift(message);
+            let n=Object.assign({},{"user":user},message);
+            this.tableData.unshift(n);
+            console.log(this.tableData); 
         });
 
         this.connection.start()
@@ -52,14 +57,7 @@ export default {
     methods: {
         // 获取 easy-mock 的模拟数据
         getData() {
-            SalesRunningListData().then(res => {//this.tableData
-                console.log(res); 
-                this.tableData = res.data;
-            }).finally(res=>{
-                    this.setTimer=setTimeout(() => {
-                        this.getData();
-                    }, 2000);
-            });
+            
             
         },
         formatDate(row, column) {
