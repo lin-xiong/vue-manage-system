@@ -71,51 +71,51 @@ export default {
                     index: 'termiRunning',
                     title: '终端实时日志'
                 },
-                {
-                    icon: 'el-icon-lx-global',
-                    index: 'salesRunning',
-                    title: '商品实时操作表'
-                },
-                {
-                    icon: 'el-icon-lx-emoji',
-                    index: 'taskList',
-                    title: '任务列表'
-                },
-                {
-                    icon: 'el-icon-lx-emoji',
-                    index: 'couponList',
-                    title: '领券列表'
-                },
-                {
-                    icon: 'el-icon-lx-rank',
-                    index: 'addrList',
-                    title: '地址列表'
-                },
-                {
-                    icon: 'el-icon-lx-cascades',
-                    index: 'Running',
-                    title: '订单实时监控'
-                },
-                {
-                    icon: 'el-icon-lx-global',
-                    index: 'caseList',
-                    title: '订单导出表'
-                },
-                {
-                    icon: 'el-icon-lx-global',
-                    index: 'goodsList',
-                    title: '货物导出表'
-                },
-                {
-                    icon: 'el-icon-lx-emoji',
-                    index: 'OPorder',
-                    title: '手工补单'
-                },
-                {
-                    icon: 'el-icon-lx-emoji',
-                    index: 'AddrCreate',
-                    title: '地址生成'
-                }
+                // {
+                //     icon: 'el-icon-lx-global',
+                //     index: 'salesRunning',
+                //     title: '商品实时操作表'
+                // },
+                // {
+                //     icon: 'el-icon-lx-emoji',
+                //     index: 'taskList',
+                //     title: '任务列表'
+                // },
+                // {
+                //     icon: 'el-icon-lx-emoji',
+                //     index: 'couponList',
+                //     title: '领券列表'
+                // },
+                // {
+                //     icon: 'el-icon-lx-rank',
+                //     index: 'addrList',
+                //     title: '地址列表'
+                // },
+                // {
+                //     icon: 'el-icon-lx-cascades',
+                //     index: 'Running',
+                //     title: '订单实时监控'
+                // },
+                // {
+                //     icon: 'el-icon-lx-global',
+                //     index: 'caseList',
+                //     title: '订单导出表'
+                // },
+                // {
+                //     icon: 'el-icon-lx-global',
+                //     index: 'goodsList',
+                //     title: '货物导出表'
+                // },
+                // {
+                //     icon: 'el-icon-lx-emoji',
+                //     index: 'OPorder',
+                //     title: '手工补单'
+                // },
+                // {
+                //     icon: 'el-icon-lx-emoji',
+                //     index: 'AddrCreate',
+                //     title: '地址生成'
+                // }
             ]
         };
     },

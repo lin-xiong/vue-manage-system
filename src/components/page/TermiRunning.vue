@@ -15,8 +15,8 @@
                 <el-table-column prop="id" label="序号" type="index" width="80" align="center"></el-table-column>
         
                 <el-table-column prop="user" label="终端" width="80" align="center" sortable></el-table-column>
-                <el-table-column prop="t" label="时间" width="150" align="center" :formatter="formatDate" sortable> </el-table-column>
-                <el-table-column prop="log" label="日志信息"  align="center"></el-table-column>
+                <el-table-column prop="t" label="时间" width="180" align="center" :formatter="formatDate" sortable> </el-table-column>
+                <el-table-column prop="log" label="日志信息"  align="left"></el-table-column>
             
             </el-table>
         </div>
@@ -38,9 +38,10 @@ export default {
     },
     created() {
         console.log("created"); 
+        // alert(process.env.VUE_APP_API_TARGET);
         this.connection = new signalR.HubConnectionBuilder()
             // .withUrl("http://192.168.123.200:5001/loghub")
-            .withUrl("http://bt.qfpek.com:8181/loghub")
+            .withUrl(process.env.VUE_APP_API_TARGET+"/loghub")
             .build();       
 
         this.connection.on("ReceiveMessage", (user, message) => {
@@ -108,5 +109,8 @@ export default {
     margin: auto;
     width: 40px;
     height: 40px;
+}
+.left-align .cell {
+  text-align: left !important;
 }
 </style>

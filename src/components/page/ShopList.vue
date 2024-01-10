@@ -9,8 +9,12 @@
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-input v-model="query.shopName" placeholder="商铺名称" class="handle-input mr10"></el-input>
-                <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
+                <el-input v-model="q.shopName" placeholder="商铺名称" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-search" @click="nameSearch">搜索</el-button>
+                <el-select v-model="q.status"  placeholder="状态">
+                    <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" ></el-option>
+                </el-select>    
+                <el-button type="primary" icon="el-icon-search" @click="statusSearch">搜索</el-button>
                 <el-button type="primary" icon="el-icon-add" @click="handleAdd">添加</el-button>
             </div>
             <el-table
@@ -29,12 +33,13 @@
                 <el-table-column prop="ks_Id" label="对应快手号" align="center" width="150" ></el-table-column>
                 <el-table-column prop="ks_SMR" label="快手实名人" align="center" width="100" ></el-table-column>
                 <el-table-column prop="shop_SMR" label="店铺实名人" align="center" width="100" ></el-table-column>
-                <el-table-column prop="execCountDay" label="今天已发布" align="center" width="95" ></el-table-column>
+                <el-table-column prop="execCountDay" label="今天已发布" align="center" width="120" sortable></el-table-column>
                 <el-table-column prop="MaxExecDay" label="最大执行数" align="center" width="95" ></el-table-column>
-                <el-table-column prop="status" label="状态" width="50" align="center">
+                <el-table-column prop="status" label="状态" width="80" align="center">
                     <template slot-scope="scope"> 
                         <span v-if="scope.row.status==1">生效</span>
                         <span v-if="scope.row.status==0">失效</span>
+                        <span v-if="scope.row.status==-1">待激活</span>
                     </template>
                 </el-table-column>
             
@@ -82,9 +87,15 @@
                 <el-form-item label="当日最大执行量">
                     <el-input v-model="editShopform.MaxExecDay"></el-input>
                 </el-form-item>
-                <el-form-item label="状态">
+                <!-- <el-form-item label="状态">
                     <el-input v-model="editShopform.status"></el-input>
-                </el-form-item>
+                </el-form-item> -->
+                <el-form-item label="状态">
+                    <el-select v-model="editShopform.status" placeholder="请选择状态">
+                        <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value">
+                        </el-option>
+                    </el-select>
+                    </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="editVisible = false">取 消</el-button>
@@ -132,6 +143,7 @@
 import { shopListData } from '../../api/index';
 import { shopEditData } from '../../api/index';
 import { shopSearchData } from '../../api/index';
+import { shopGetstatusData} from '../../api/index';
 import { shopAddData } from '../../api/index';
 
 export default {
@@ -142,7 +154,16 @@ export default {
                 pageIndex: 1,
                 pageSize: 30
             },
+            q:{shopName:"",
+                status:{ label: '待激活', value: '-1' }
+            },
             tableData: [],
+            statusOptions: [ // 状态选项
+                { label: '生效', value: '1' },
+                { label: '待激活', value: '-1' }
+                // { label: '失效', value: '-100' }
+                // 更多状态...
+            ],
             multipleSelection: [],
             delList: [],
             editVisible: false,
@@ -168,9 +189,20 @@ export default {
             });
         },
         // 触发搜索按钮
-        handleSearch() {
+        nameSearch() {
             this.$set(this.query, 'pageIndex', 1);
+            this.$set(this.query, 'shopName', this.q.shopName);
             shopSearchData(this.query).then(res => {
+                console.log(res);
+                this.tableData = res.data;
+                this.pageTotal = res.pageTotal ;
+            });
+        },
+        // 触发搜索按钮
+        statusSearch() {
+            this.$set(this.query, 'pageIndex', 1);
+            this.$set(this.query, 'status', this.q.status);
+            shopGetstatusData(this.query).then(res => {
                 console.log(res);
                 this.tableData = res.data;
                 this.pageTotal = res.pageTotal ;

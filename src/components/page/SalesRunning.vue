@@ -70,8 +70,9 @@ export default {
         // if(!this.getDataOnce) return;
         // this.getDataOnce=false;
         // this.getData();
+        // alert(process.env.VUE_APP_API_TARGET);
         this.connection = new signalR.HubConnectionBuilder()
-            .withUrl("http://192.168.123.200:5001/loghub")
+            .withUrl(process.env.VUE_APP_API_TARGET+"/loghub")
             .build();
 
         this.connection.start()
