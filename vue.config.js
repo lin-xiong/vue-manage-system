@@ -1,9 +1,9 @@
 const webpack = require('webpack');
-const API_TARGET = 'http://api.ks.qfpek.com:8181';
-// const API_TARGET = 'http://192.168.123.200:8181';
+const API_TARGET = 'https://api.ks.qfpek.com';
+//const API_TARGET = 'http://127.0.0.1:8181';
 
 module.exports = {
-    baseUrl: './',
+    publicPath: './',
     assetsDir: 'static',
     productionSourceMap: false,
     devServer: {

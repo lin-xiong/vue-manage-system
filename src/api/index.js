@@ -64,7 +64,7 @@ export const shopSearchData = query => {
     });
 };
 
-export const shopGetstatusData = query => {
+export const shopGetStatusData = query => {
     return request({
         url: '/api/Shop/'+localStorage.getItem('ms_username')+"/"+localStorage.getItem('ms_ps')+'/getstatus',
         method: 'get',

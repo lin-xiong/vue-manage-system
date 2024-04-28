@@ -1,17 +1,15 @@
 <template>
     <div>
         <div class="container" style="padding:0px;">
-            <el-table
-                :data="tableData"
-                :default-sort = "{prop: 'name', order: 'descending'}"
-                border
-                class="table"
-                ref="multipleTable"
-                header-cell-class-name="table-header"
-            
-                :height="700"
-                :stripe="true"
-            >
+            <el-select v-model="filterName" placeholder="请选择">
+                <el-option v-for="item in nameFilters"
+                :key="item.value"
+                :label="item.text"
+                :value="item.value">
+                </el-option>
+            </el-select>
+            <el-table :data="filteredData"
+                :default-sort = "{prop: 'name', order: 'descending'}" border class="table" ref="multipleTable" header-cell-class-name="table-header" :height="700" :stripe="true" >
                 <el-table-column prop="id" label="序号" type="index" width="80" align="center"></el-table-column>
         
                 <el-table-column prop="user" label="终端" width="80" align="center" sortable></el-table-column>
@@ -32,8 +30,14 @@ export default {
     name: 'termiRunning',
     data() {
         return {
-        
-            tableData: []
+            tableData: [],
+            nameFilters: [
+                { text: '全部', value: '' },
+                // { text: 'R01', value: 'R01' },
+                // { text: 'R02', value: 'R02' },
+            ],
+            filterName: '',
+            filteredData: [],
         };
     },
     created() {
@@ -48,12 +52,25 @@ export default {
             // this.tableData.push(message);
             let n=Object.assign({},{"user":user},message);
             this.tableData.unshift(n);
+            // alert(this.nameFilters.some(x=>x.value==n.user))
+            if (!this.nameFilters.some(x=>x.value==n.user))
+            {
+                this.nameFilters.push({"text":n.user,"value":n.user});
+            }
             console.log(this.tableData); 
         });
 
         this.connection.start()
             .then(() => console.log('Connection started!'))
             .catch(err => console.log('Error while establishing connection :('));
+    },
+    watch: {
+        filterName() {
+            this.filterData();
+        },
+        tableData(){
+            this.filterData();
+        }
     },
     methods: {
         // 获取 easy-mock 的模拟数据
@@ -69,11 +86,18 @@ export default {
             }
             let dt = new Date(data)
             return dt.getFullYear() + '-' + (dt.getMonth() +1) + '-' + dt.getDate()+" "+dt.getHours()+":"+dt.getMinutes()+":"+dt.getSeconds();
+        },
+        filterData() {
+            if (this.filterName) {
+                this.filteredData = this.tableData.filter(item => item.user === this.filterName);
+            } else {
+                this.filteredData = this.tableData;
+            }
         }
     },
     deactivated()
     {
-      
+    
     },
     activated(){
         

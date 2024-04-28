@@ -34,7 +34,7 @@
                 <el-table-column prop="ks_SMR" label="快手实名人" align="center" width="100" ></el-table-column>
                 <el-table-column prop="shop_SMR" label="店铺实名人" align="center" width="100" ></el-table-column>
                 <el-table-column prop="execCountDay" label="今天已发布" align="center" width="120" sortable></el-table-column>
-                <el-table-column prop="MaxExecDay" label="最大执行数" align="center" width="95" ></el-table-column>
+                <el-table-column prop="maxExecDay" label="最大执行数" align="center" width="95" ></el-table-column>
                 <el-table-column prop="status" label="状态" width="80" align="center">
                     <template slot-scope="scope"> 
                         <span v-if="scope.row.status==1">生效</span>
@@ -85,7 +85,7 @@
                     <el-input v-model="editShopform.shop_SMR"></el-input>
                 </el-form-item>
                 <el-form-item label="当日最大执行量">
-                    <el-input v-model="editShopform.MaxExecDay"></el-input>
+                    <el-input v-model="editShopform.maxExecDay"></el-input>
                 </el-form-item>
                 <!-- <el-form-item label="状态">
                     <el-input v-model="editShopform.status"></el-input>
@@ -125,7 +125,7 @@
                     <el-input v-model="addShopform.shop_SMR"></el-input>
                 </el-form-item>
                 <el-form-item label="当日最大执行量">
-                    <el-input v-model="addShopform.MaxExecDay"></el-input>
+                    <el-input v-model="addShopform.maxExecDay"></el-input>
                 </el-form-item>
                 <el-form-item label="状态">
                     <el-input v-model="addShopform.status"></el-input>
@@ -143,7 +143,7 @@
 import { shopListData } from '../../api/index';
 import { shopEditData } from '../../api/index';
 import { shopSearchData } from '../../api/index';
-import { shopGetstatusData} from '../../api/index';
+import { shopGetStatusData } from '../../api/index';
 import { shopAddData } from '../../api/index';
 
 export default {
@@ -202,7 +202,7 @@ export default {
         statusSearch() {
             this.$set(this.query, 'pageIndex', 1);
             this.$set(this.query, 'status', this.q.status);
-            shopGetstatusData(this.query).then(res => {
+            shopGetStatusData(this.query).then(res => {
                 console.log(res);
                 this.tableData = res.data;
                 this.pageTotal = res.pageTotal ;

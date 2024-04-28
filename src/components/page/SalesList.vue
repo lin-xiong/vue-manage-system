@@ -3,7 +3,7 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>
-                    <i class="el-icon-lx-cascades"></i> 店铺
+                    <i class="el-icon-lx-cascades"></i> 商品
                 </el-breadcrumb-item>
             </el-breadcrumb>
         </div>
@@ -16,7 +16,7 @@
                 <el-button style="margin-left:10px" type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
                 <input type="file" @change="handleFileUpload" />
                 <el-button type="primary" icon="el-icon-cherry" @click="processData">导入</el-button>
-                <el-button type="primary" icon="el-icon-cherry" @click="fileData">文件导入</el-button>
+                <!-- <el-button type="primary" icon="el-icon-cherry" @click="fileData">文件导入</el-button> -->
                 <!-- <span style="padding:8px 0px 0px 5px;">总计:{{totalCount}}</span> -->
                 <!-- <el-button type="primary" icon="el-icon-cold-drink" @click="chargeback">退单</el-button> -->
             </div>
@@ -29,9 +29,9 @@
                 @selection-change="handleSelectionChange"
                 :stripe="true"
             >
-                <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
+                <el-table-column prop="id" label="ID" width="80" align="center"></el-table-column>
                 <el-table-column prop="ks_id" label="快手号" width="110"  align="center"></el-table-column>
-                <el-table-column prop="sp_id" label="商品编号" width="135"  align="center"></el-table-column>
+                <el-table-column prop="sp_id" label="商品编号" width="145"  align="center"></el-table-column>
                 <el-table-column label="头像" width="120">
                     <template slot-scope="scope">
                         <img :src="scope.row.picUrl.split('\r\n')[0]" alt="avatar" style="width: 50px; height: 50px;"
@@ -76,22 +76,22 @@
 
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="editShopform" :model="editShopform" label-width="90px">
-                <el-input v-model="editShopform.id" type="hidden"></el-input>
-                <el-form-item label="店铺名称">
-                    <el-input v-model="editShopform.shopName"></el-input>
+            <el-form ref="editSalesform" :model="editSalesform" label-width="90px">
+                <el-input v-model="editSalesform.id" type="hidden"></el-input>
+                <el-form-item label="快手号">
+                    <el-input v-model="editSalesform.sp_id" readonly></el-input>
                 </el-form-item>
-                <el-form-item label="备注简称">
-                    <el-input v-model="editShopform.shortName"></el-input>
+                <el-form-item label="商品编号">
+                    <el-input v-model="editSalesform.sp_id" readonly></el-input>
                 </el-form-item>
-                <el-form-item label="佣金">
-                    <el-input v-model="editShopform.commission"></el-input>
+                <el-form-item label="商品名称">
+                    <el-input v-model="editSalesform.title"></el-input>
                 </el-form-item>
-                <el-form-item label="每区快递数">
-                    <el-input v-model="editShopform.courierCount"></el-input>
+                <el-form-item label="执行次数">
+                    <el-input v-model="editSalesform.execCount"></el-input>
                 </el-form-item>
                 <el-form-item label="状态">
-                    <el-input v-model="editShopform.status"></el-input>
+                    <el-input v-model="editSalesform.status"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
@@ -100,36 +100,7 @@
             </span>
         </el-dialog>
 
-        <!-- 增加商户弹出框 -->
-        <el-dialog title="增加商户" :visible.sync="addVisible" width="30%">
-            <el-form ref="addShopform" :model="addShopform" label-width="90px">
-                <el-form-item label="店铺名称">
-                    <el-input v-model="addShopform.shopName"></el-input>
-                </el-form-item>
-                <!-- <el-form-item label="优惠券">
-                    <el-input v-model="addShopform.youHuiQuan"></el-input>
-                </el-form-item> -->
-                <el-form-item label="手机">
-                    <el-input v-model="addShopform.tel"></el-input>
-                </el-form-item>
-                <el-form-item label="备注简称">
-                    <el-input v-model="addShopform.shortName"></el-input>
-                </el-form-item>
-                <el-form-item label="佣金">
-                    <el-input v-model="addShopform.commission"></el-input>
-                </el-form-item>
-                <el-form-item label="每区快递数">
-                    <el-input v-model="addShopform.courierCount"></el-input>
-                </el-form-item>
-                <el-form-item label="状态">
-                    <el-input v-model="addShopform.status"></el-input>
-                </el-form-item>
-            </el-form>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="addVisible = false">取 消</el-button>
-                <el-button type="primary" @click="saveAdd">确 定</el-button>
-            </span>
-        </el-dialog>
+
     </div>
 </template>
 
@@ -158,7 +129,7 @@ export default {
             editVisible: false,
             addVisible: false,
             pageTotal: 0,
-            editShopform:{},
+            editSalesform:{},
             addShopform:{},
             multiShop: [],
             rowSalesform:{},
@@ -287,19 +258,19 @@ export default {
         // 编辑操作
         handleEdit(index, row) {
             this.idx = index;
-            this.editShopform = row;
+            this.editSalesform = row;
             this.editVisible = true;
         },
         // 保存编辑
         saveEdit() {
-            shopEditData(this.editShopform).then(res => {
+            salesEditData(this.editSalesform).then(res => {
                 console.log(res);
                 if(res==0)
-                 {  
+                {  
                     this.editVisible = false;
                     this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-                    this.$set(this.tableData, this.idx, this.editShopform);
-                 }
+                    this.$set(this.tableData, this.idx, this.editSalesform);
+                }
                 else {
                     this.$message.error('修改出错！');
                     console.log('error edit shop!!');
@@ -316,11 +287,11 @@ export default {
             shopAddData(this.addShopform).then(res => {
                 console.log(res);
                 if(res>=1)
-                 {  
+                {  
                     this.addVisible = false;
                     this.$message.success(`增加商铺成功`);
                     this.getData();
-                 }
+                }
                 else {
                     this.$message.error('增加商铺出错！');
                     console.log('error add shop!!');
